@@ -619,7 +619,7 @@ function makeLocal() {
   const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const state = { games: {}, playersBy: {}, joining: false, gid: null, picked: false, config: {}, configs: {}, groupsSeen: new Set(), gamesReady: false, subscribed: new Set(), completing: new Set(), creating: false,
     settings: null, players: [], history: [], imported: [], feedback: [], showAllGames: false, ready: false, busy: new Set(), pendingRender: false, sel: null, guestOpen: false, profiles: {}, pview: "list", tally: [], showAllLb: false };
-  const APP_VERSION = "v25";
+  const APP_VERSION = "v26";
 
   const ls = {
     get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
@@ -2183,7 +2183,8 @@ function makeLocal() {
   ls.set("smackdown-groups", Array.from(visited));
   const groupHref = (g) => location.pathname + (g === "friday" ? "" : "?g=" + g) + "#home";
   function allGroups() {
-    const all = new Set(["friday", GROUP].concat(Array.from(visited), Object.keys(state.configs), Array.from(state.groupsSeen)));
+    const real = (g) => g === "friday" || g === GROUP || !state.gamesReady || !!state.configs[g] || state.groupsSeen.has(g);
+    const all = new Set(["friday", GROUP].concat(Array.from(visited).filter(real), Object.keys(state.configs), Array.from(state.groupsSeen)));
     return Array.from(all).map((g) => groupInfoFor(g, state.configs[g])).sort((a, b) => a.weekday - b.weekday || a.name.localeCompare(b.name));
   }
   function openNewGroup() {
@@ -2195,15 +2196,16 @@ function makeLocal() {
     const iDay = lab("Day", daySelect(1));
     const iTime = lab("Time", Object.assign(el("input"), { type: "text", placeholder: "9 pm", maxLength: 30 }));
     const hint = el("div", "tiny muted full"); f.appendChild(hint);
-    const slugFor = () => { const d = DAYS[Number(iDay.value)].toLowerCase(), n = slugify(iName.value); return (!state.configs[d] && !state.groupsSeen.has(d) && d !== "friday") ? d : (n || d + "-2"); };
-    const upd = () => { hint.textContent = "Link: " + location.host + location.pathname + "?g=" + slugFor(); };
-    iName.oninput = upd; iDay.onchange = upd; upd();
+    const slugFor = () => { const typed = iName.value.trim(), hit = typed && Object.keys(state.configs).find((k) => state.configs[k].name && same(state.configs[k].name, typed)); if (hit) return hit; const d = DAYS[Number(iDay.value)].toLowerCase(), n = slugify(iName.value); return (!state.configs[d] && !state.groupsSeen.has(d) && d !== "friday") ? d : (n || d + "-2"); };
+    const exists = (g) => g === "friday" || !!state.configs[g] || state.groupsSeen.has(g);
+    const upd = () => { const g = slugFor(); hint.textContent = exists(g) ? "That group already exists. Create will open it." : "Link: " + location.host + location.pathname + "?g=" + g; go2.textContent = exists(g) ? "Open " + (g === "friday" ? "Friday" : (state.configs[g] && state.configs[g].name) || g) : "Create group"; };
+    iName.oninput = upd; iDay.onchange = upd;
     f.appendChild(el("div", "small muted full", me.uid ? "You'll be this group's admin. You can make others admins from their player card." : "Sign in with Google first (tap your name) to be this group's admin."));
-    const go2 = el("button", "btn primary full", "Create group"); go2.type = "submit"; f.appendChild(go2);
+    const go2 = el("button", "btn primary full", "Create group"); go2.type = "submit"; f.appendChild(go2); upd();
     f.onsubmit = async (ev) => {
       ev.preventDefault();
       const g = slugFor(), wd = Number(iDay.value);
-      if (g === "friday" || state.configs[g]) { toast("That link is taken. Try another name."); return; }
+      if (exists(g)) { location.href = groupHref(g); return; }
       try {
         await db.doc("games/config-" + g).set({ kind: "config", group: g, name: iName.value.trim() || DAYS[wd] + " Night Smackdown", weekday: wd, time: iTime.value.trim(), court: "", createdAt: Date.now(), admins: me.uid ? { [me.uid]: me.name || me.email || "Admin" } : {} });
         // the group's first game, on the next chosen weekday
@@ -2215,6 +2217,52 @@ function makeLocal() {
     };
     sh.appendChild(f);
     openSheet("newgroup");
+  }
+  /* ---------- Delete a group (admins/organisers): backup file first, then everything in the group goes ---------- */
+  async function collectGroup() {
+    const all = await db.collection("games").fetch(), docs = {};
+    const isCfg = (id) => id === "config" || /^config-/.test(id), isBox = (id) => /^(feedback|activity)(-|$)/.test(id) || id === "users";
+    const mineGame = (r) => !isCfg(r.id) && !isBox(r.id) && (MAIN ? !r.group || r.group === "friday" : r.group === GROUP);
+    const games = all.filter(mineGame);
+    games.forEach((g) => { docs["games/" + g.id] = g; });
+    for (const g of games) (await db.collection("games/" + g.id + "/players").fetch()).forEach((r) => { docs["games/" + g.id + "/players/" + r.id] = r; });
+    const boxes = [FEEDBACK, ACTIVITY];
+    for (const b of boxes) (await db.collection(b).fetch()).forEach((r) => { docs[b + "/" + r.id] = r; });
+    if (state.config && Object.keys(state.config).length) docs[CONFIG] = state.config;
+    return docs;
+  }
+  function downloadJson(name, obj) {
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(obj)], { type: "application/json" })); a.download = name;
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  }
+  function openDeleteGroup() {
+    if (!isCaptain()) { toast(captainOnly()); return; }
+    const gi = groupInfo(), sh = sheetHead("Delete group");
+    sh.appendChild(el("div", "small", "This permanently deletes " + gi.name + ": every game, the player lists, payments, activity log and feedback. A backup file is saved to this phone first."));
+    if (MAIN) sh.appendChild(el("div", "small", "This is the main Friday group. The stats imported from WhatsApp are not deleted."));
+    const f = el("form"); f.autocomplete = "off";
+    const l = el("label", "full"); l.textContent = 'Type the group name to confirm: "' + gi.name + '"';
+    const inp = el("input"); inp.type = "text"; inp.id = "dg-name"; l.appendChild(inp); f.appendChild(l);
+    const go2 = el("button", "btn ghost danger full", "Back up and delete"); go2.type = "submit"; go2.id = "dg-go"; f.appendChild(go2);
+    f.onsubmit = async (ev) => {
+      ev.preventDefault();
+      if (!same(inp.value, gi.name)) { toast("Type the group name exactly to confirm."); return; }
+      go2.disabled = true; go2.textContent = "Saving a backup…";
+      try {
+        const docs = await collectGroup();
+        const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+        downloadJson("smackdown-" + GROUP + "-backup-" + stamp + ".json", { at: new Date().toISOString(), group: GROUP, name: gi.name, docs });
+        go2.textContent = "Deleting…";
+        const paths = Object.keys(docs).filter((p) => p !== CONFIG).sort((a, b) => b.split("/").length - a.split("/").length);
+        paths.push(CONFIG);
+        for (let i = 0; i < paths.length; i += 400) { const b = db.batch(); paths.slice(i, i + 400).forEach((p) => b.delete(p)); await b.commit(); }
+        ls.set("smackdown-groups", ls.get("smackdown-groups", []).filter((g) => g !== GROUP));
+        toast("Group deleted. Backup saved to your downloads.");
+        setTimeout(() => { location.href = location.pathname + "#home"; }, 1200);
+      } catch (e) { console.error(e); toast("Couldn't finish deleting. Nothing else was changed after the error; try again."); go2.disabled = false; go2.textContent = "Back up and delete"; }
+    };
+    sh.appendChild(f);
+    openSheet("delgroup");
   }
   function daySelect(v) {
     const sel = el("select"); DAYS.forEach((d, i) => { const o = el("option", "", d); o.value = String(i); sel.appendChild(o); }); sel.value = String(v); return sel;
@@ -2248,6 +2296,7 @@ function makeLocal() {
     row("m-settings", "Group settings", "", () => openGroupSettings());
     row("m-admins", "Admins", hasAdmins() ? Object.keys(admins()).length + " ›" : "›", () => openAdmins());
     row("m-activity", "Activity log", "", () => openActivity());
+    row("m-delgroup", "Delete this group", "›", () => openDeleteGroup());
     row("m-feedback", "Feedback", state.feedback.length + " ›", () => openFeedbackList());
     if (!hasAdmins()) row("m-off", "Turn off organiser tools on this phone", " ", () => { captHash = null; ls.set(CAPT_KEY, null); render(); toast("Organiser tools off on this phone."); });
   }

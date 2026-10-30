@@ -30,7 +30,7 @@ service cloud.firestore {
 
     // Which group config a doc belongs to: games/config (Friday) or games/config-<group>
     function cfgOfGame(id) { return id.matches('^.+--g-.*$') ? 'config-' + id.split('--g-')[0] : 'config'; }
-    function cfgOfBox(id, box) { return id == box ? 'config' : id.replace('^' + box + '-', 'config-'); }
+    function cfgOfBox(id, box) { return id == box ? 'config' : 'config-' + id.replace(box + '-', ''); }
     function adminMap(cfg) {
       let p = /databases/$(database)/documents/games/$(cfg);
       let a = exists(p) ? get(p).data.get('admins', null) : null;
@@ -97,6 +97,8 @@ service cloud.firestore {
       // group config
       allow create: if isConfig(game) && signedIn() && adminsOk(request.resource.data.get('admins', null));
       allow update: if isConfig(game) && cfgUpdateOk();
+      // Deleting a whole group: its admins (or anyone signed in while it has none)
+      allow delete: if isConfig(game) && canRun(game);
       // games: organisers (admins, or anyone while the group has no admins); the bill as above
       allow create, delete: if isGame(game) && canRun(cfgOfGame(game)) && (request.method == 'delete' || gameShapeOk(game));
       allow update: if isGame(game) && signedIn() && gameShapeOk(game) && (canRun(cfgOfGame(game)) || billOnly());
@@ -109,6 +111,7 @@ service cloud.firestore {
         allow create: if isBox(game, 'activity') && signedIn()
           && request.resource.data.get('text', null) is string && request.resource.data.text.size() <= 300
           && (request.resource.data.get('uid', null) == null || request.resource.data.get('uid', null) == request.auth.uid);
+        allow delete: if isBox(game, 'activity') && canRun(cfgOfBox(game, 'activity'));
         // Feedback: anyone signed in sends; organisers delete
         allow create: if isBox(game, 'feedback') && signedIn()
           && request.resource.data.get('text', null) is string && request.resource.data.text.size() <= 1000;
