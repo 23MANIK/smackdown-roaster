@@ -389,6 +389,7 @@ textarea.fallback { width: 100%; font: inherit; font-size: 14px; border: 1px sol
 </header>
 
 <main>
+  <div class="banner" id="deleted-note" hidden></div>
   <div class="banner" id="demo" hidden>Demo mode: the shared list isn't connected, so changes stay on this phone.</div>
 
   <!-- GAME -->
@@ -1075,7 +1076,7 @@ function makeLocal() {
   }
   /* ---------- Next-step card: one card that follows the game's stage ---------- */
   const ord = (n) => { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
-  const canNewGame = () => !((pinHash() || hasAdmins()) && !isCaptain());
+  const canNewGame = () => !groupDeleted() && !((pinHash() || hasAdmins()) && !isCaptain());
   const quiet = (text, fn, danger) => btn("btn quiet" + (danger ? " danger" : ""), text, fn);
   // The next upcoming game after this one, with a one-tap join that names its date
   function nextGameBlock(box) {
@@ -1261,6 +1262,7 @@ function makeLocal() {
   async function join(name, tentative, guestOf) {
     if (!state.gid) { toast("Still loading. Try again in a moment."); return; }
     if (state.joining) return;
+    if (groupDeleted()) { toast("This group was deleted."); return; }
     const dup = state.players.find((p) => p.status !== "out" && same(p.name, name));
     if (dup) {
       if (!guestOf && !mine.has(dup.id)) { mine.add(dup.id); saveMine(); render(); toast("You're already on the list."); return; }
@@ -2183,9 +2185,10 @@ function makeLocal() {
   ls.set("smackdown-groups", Array.from(visited));
   const groupHref = (g) => location.pathname + (g === "friday" ? "" : "?g=" + g) + "#home";
   function allGroups() {
+    const gone = (g) => !!(state.configs[g] && state.configs[g].deletedAt);
     const real = (g) => g === "friday" || g === GROUP || !state.gamesReady || !!state.configs[g] || state.groupsSeen.has(g);
     const all = new Set(["friday", GROUP].concat(Array.from(visited).filter(real), Object.keys(state.configs), Array.from(state.groupsSeen)));
-    return Array.from(all).map((g) => groupInfoFor(g, state.configs[g])).sort((a, b) => a.weekday - b.weekday || a.name.localeCompare(b.name));
+    return Array.from(all).filter((g) => !gone(g)).map((g) => groupInfoFor(g, state.configs[g])).sort((a, b) => a.weekday - b.weekday || a.name.localeCompare(b.name));
   }
   function openNewGroup() {
     const sh = sheetHead("New group");
@@ -2218,51 +2221,42 @@ function makeLocal() {
     sh.appendChild(f);
     openSheet("newgroup");
   }
-  /* ---------- Delete a group (admins/organisers): backup file first, then everything in the group goes ---------- */
-  async function collectGroup() {
-    const all = await db.collection("games").fetch(), docs = {};
-    const isCfg = (id) => id === "config" || /^config-/.test(id), isBox = (id) => /^(feedback|activity)(-|$)/.test(id) || id === "users";
-    const mineGame = (r) => !isCfg(r.id) && !isBox(r.id) && (MAIN ? !r.group || r.group === "friday" : r.group === GROUP);
-    const games = all.filter(mineGame);
-    games.forEach((g) => { docs["games/" + g.id] = g; });
-    for (const g of games) (await db.collection("games/" + g.id + "/players").fetch()).forEach((r) => { docs["games/" + g.id + "/players/" + r.id] = r; });
-    const boxes = [FEEDBACK, ACTIVITY];
-    for (const b of boxes) (await db.collection(b).fetch()).forEach((r) => { docs[b + "/" + r.id] = r; });
-    if (state.config && Object.keys(state.config).length) docs[CONFIG] = state.config;
-    return docs;
-  }
-  function downloadJson(name, obj) {
-    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(obj)], { type: "application/json" })); a.download = name;
-    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
-  }
+  /* ---------- Delete a group (admins/organisers): hidden from the app, data stays in the database ---------- */
+  const groupDeleted = () => !!(state.config && state.config.deletedAt);
   function openDeleteGroup() {
     if (!isCaptain()) { toast(captainOnly()); return; }
-    const gi = groupInfo(), sh = sheetHead("Delete group");
-    sh.appendChild(el("div", "small", "This permanently deletes " + gi.name + ": every game, the player lists, payments, activity log and feedback. A backup file is saved to this phone first."));
-    if (MAIN) sh.appendChild(el("div", "small", "This is the main Friday group. The stats imported from WhatsApp are not deleted."));
+    const gi = groupInfo(), sh = sheetHead(groupDeleted() ? "Restore group" : "Delete group");
+    if (groupDeleted()) {
+      sh.appendChild(el("div", "small", gi.name + " was deleted. Its games and players are still saved. Restore it to use it again."));
+      const r = btn("btn primary full", "Restore this group", async () => {
+        try { await db.doc(CONFIG).merge({ deletedAt: null, deletedBy: null }); logAct("Restored the group " + gi.name, null); closeSheet(); toast("Group restored"); } catch (e) { console.error(e); toast("That didn't save. Try again."); }
+      }); r.id = "dg-restore"; sh.appendChild(r);
+      openSheet("delgroup"); return;
+    }
+    sh.appendChild(el("div", "small", gi.name + " will disappear from the group list and nobody can join or start games in it. Nothing is erased: the games, players and payments stay saved, and an admin can restore it."));
     const f = el("form"); f.autocomplete = "off";
     const l = el("label", "full"); l.textContent = 'Type the group name to confirm: "' + gi.name + '"';
     const inp = el("input"); inp.type = "text"; inp.id = "dg-name"; l.appendChild(inp); f.appendChild(l);
-    const go2 = el("button", "btn ghost danger full", "Back up and delete"); go2.type = "submit"; go2.id = "dg-go"; f.appendChild(go2);
+    const go2 = el("button", "btn ghost danger full", "Delete group"); go2.type = "submit"; go2.id = "dg-go"; f.appendChild(go2);
     f.onsubmit = async (ev) => {
       ev.preventDefault();
       if (!same(inp.value, gi.name)) { toast("Type the group name exactly to confirm."); return; }
-      go2.disabled = true; go2.textContent = "Saving a backup…";
+      go2.disabled = true;
       try {
-        const docs = await collectGroup();
-        const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
-        downloadJson("smackdown-" + GROUP + "-backup-" + stamp + ".json", { at: new Date().toISOString(), group: GROUP, name: gi.name, docs });
-        go2.textContent = "Deleting…";
-        const paths = Object.keys(docs).filter((p) => p !== CONFIG).sort((a, b) => b.split("/").length - a.split("/").length);
-        paths.push(CONFIG);
-        for (let i = 0; i < paths.length; i += 400) { const b = db.batch(); paths.slice(i, i + 400).forEach((p) => b.delete(p)); await b.commit(); }
+        logAct("Deleted the group " + gi.name, null);
+        await db.doc(CONFIG).merge({ deletedAt: Date.now(), deletedBy: me.name || "Admin", name: gi.name });
         ls.set("smackdown-groups", ls.get("smackdown-groups", []).filter((g) => g !== GROUP));
-        toast("Group deleted. Backup saved to your downloads.");
+        toast("Group deleted. Its data is still saved.");
         setTimeout(() => { location.href = location.pathname + "#home"; }, 1200);
-      } catch (e) { console.error(e); toast("Couldn't finish deleting. Nothing else was changed after the error; try again."); go2.disabled = false; go2.textContent = "Back up and delete"; }
+      } catch (e) { console.error(e); toast("That didn't save. Try again."); go2.disabled = false; }
     };
     sh.appendChild(f);
     openSheet("delgroup");
+  }
+  function showDeletedNote() {
+    const n = $("deleted-note"); if (!n) return;
+    n.hidden = !groupDeleted();
+    if (groupDeleted()) n.textContent = "This group was deleted" + (state.config.deletedBy ? " by " + state.config.deletedBy : "") + ". Its data is saved; an admin can restore it from the Group tab.";
   }
   function daySelect(v) {
     const sel = el("select"); DAYS.forEach((d, i) => { const o = el("option", "", d); o.value = String(i); sel.appendChild(o); }); sel.value = String(v); return sel;
@@ -2296,7 +2290,7 @@ function makeLocal() {
     row("m-settings", "Group settings", "", () => openGroupSettings());
     row("m-admins", "Admins", hasAdmins() ? Object.keys(admins()).length + " ›" : "›", () => openAdmins());
     row("m-activity", "Activity log", "", () => openActivity());
-    row("m-delgroup", "Delete this group", "›", () => openDeleteGroup());
+    row("m-delgroup", groupDeleted() ? "Restore this group" : "Delete this group", "›", () => openDeleteGroup());
     row("m-feedback", "Feedback", state.feedback.length + " ›", () => openFeedbackList());
     if (!hasAdmins()) row("m-off", "Turn off organiser tools on this phone", " ", () => { captHash = null; ls.set(CAPT_KEY, null); render(); toast("Organiser tools off on this phone."); });
   }
@@ -2484,7 +2478,7 @@ function makeLocal() {
       const g = v.group || "friday"; state.groupsSeen.add(g);
       if (g === GROUP) games[id] = v;
     });
-    state.configs = configs; state.config = configs[GROUP] || {};
+    state.configs = configs; state.config = configs[GROUP] || {}; showDeletedNote();
     state.games = games; state.gamesReady = true;
     shownIds().forEach(watchPlayers);
     Object.keys(games).filter((id) => games[id].completed && owesIn(games[id])).forEach(watchPlayers);
