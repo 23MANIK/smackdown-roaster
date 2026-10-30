@@ -1,0 +1,2458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Smackdown Roster</title>
+<meta name="description" content="Friday Night Smackdown: join the weekly game, track payments and build teams.">
+<meta name="theme-color" content="#11161c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e8642a'/%3E%3Cpath d='M2 32h60M32 2v60M12 10c12 10 12 34 0 44M52 10c-12 10-12 34 0 44' stroke='%2311161c' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: phone app shell. Sticky top bar, one screen at a time, bottom tab bar. */
+:root {
+  --bg: #f3f4f6; --surface: #ffffff; --surface-2: #f8f9fa; --ink: #11161c; --muted: #5d6874; --line: #dde1e6;
+  --accent: #e8642a; --accent-ink: #ffffff; --accent-soft: #fde9df;
+  --good: #187a4f; --good-soft: #dcf2e6; --warn: #96620e; --warn-soft: #f9eed6; --info: #2457a8; --info-soft: #e3ecfa;
+  --hero: #11161c; --hero-ink: #f4f5f7; --hero-muted: #a5afba; --hero-line: #2a333d;
+  --jw-bg: #fafbfc; --jw-chip: #ffffff; --jw-ink: #11161c; --jw-line: #cdd3da;
+  --jb-bg: #151a20; --jb-chip: #252c35; --jb-ink: #f2f4f6; --jb-line: #3b4550;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --tabs-h: 64px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1116; --surface: #151c23; --surface-2: #1a222a; --ink: #e8ecf0; --muted: #95a2ae; --line: #27313b;
+    --accent: #f27a3f; --accent-soft: #3a2316; --good: #4cc48f; --good-soft: #14302a; --warn: #e4ab49; --warn-soft: #33281a;
+    --info: #7eaaf2; --info-soft: #1a2638; --hero: #182029; --hero-line: #2c3743; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1116; --surface: #151c23; --surface-2: #1a222a; --ink: #e8ecf0; --muted: #95a2ae; --line: #27313b;
+  --accent: #f27a3f; --accent-soft: #3a2316; --good: #4cc48f; --good-soft: #14302a; --warn: #e4ab49; --warn-soft: #33281a;
+  --info: #7eaaf2; --info-soft: #1a2638; --hero: #182029; --hero-line: #2c3743; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.45; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; letter-spacing: .01em; text-wrap: balance; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+.tiny { font-size: 12px; }
+
+/* Top bar */
+.top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  padding: max(10px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 10px max(16px, env(safe-area-inset-left, 0px)); }
+.top-in { max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+.brand { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 20px; text-transform: uppercase; letter-spacing: .04em; margin-right: auto; min-width: 0; overflow: hidden; white-space: nowrap; }
+.brand { border: 0; background: none; color: var(--ink); padding: 0; cursor: pointer; min-height: 44px; }
+.brand .grp { font: 700 12px var(--font-body); letter-spacing: .02em; text-transform: none; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 3px 8px; }
+.grp-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); text-decoration: none; }
+.grp-row.on { border-color: var(--accent); background: var(--accent-soft); }
+.grp-row b { display: block; }
+.brand i { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); display: inline-block; position: relative; flex: none; }
+.brand i::before, .brand i::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--hero); clip-path: inset(0 45% 0 45%); }
+.brand i::after { clip-path: inset(45% 0 45% 0); }
+.me-chip { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px 0 4px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-weight: 600; font-size: 14px; color: var(--ink); max-width: 42vw; min-width: 0; }
+.me-chip .av { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; font-size: 13px; flex: none; }
+.me-chip span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); display: grid; place-items: center; padding: 0; flex: none; }
+.icon-btn.on { background: var(--info-soft); color: var(--info); border-color: transparent; }
+.icon-btn svg { width: 20px; height: 20px; }
+
+main { max-width: 560px; margin: 0 auto; padding: 4px max(16px, env(safe-area-inset-right, 0px)) calc(var(--tabs-h) + 28px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.screen { display: flex; flex-direction: column; gap: 16px; }
+.screen-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding-top: 4px; }
+.screen-head h2 { font-size: 30px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; }
+
+/* Bottom tabs */
+.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.tabs-in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); height: var(--tabs-h); }
+.tab { border: 0; background: none; color: var(--muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font: 600 12px var(--font-body); padding: 0; position: relative; }
+.tab svg { width: 24px; height: 24px; }
+.tab[aria-current="page"] { color: var(--accent); }
+.tab[aria-current="page"]::before { content: ""; position: absolute; top: 0; left: 30%; right: 30%; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
+.tab .badge { position: absolute; top: 8px; left: calc(50% + 6px); min-width: 18px; height: 18px; border-radius: 9px; background: var(--accent); color: #fff; font-size: 11px; display: grid; place-items: center; padding: 0 5px; }
+
+/* Buttons and inputs */
+button { font: inherit; font-weight: 600; cursor: pointer; color: var(--ink); touch-action: manipulation; }
+.btn { min-height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); padding: 0 16px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.big { min-height: 56px; font-size: 18px; border-radius: 14px; font-family: var(--font-display); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.btn.ghost { background: transparent; }
+.btn.danger { color: var(--accent); }
+.btn.good { background: var(--good-soft); border-color: transparent; color: var(--good); }
+.btn.sm { min-height: 36px; padding: 0 12px; font-size: 14px; border-radius: 10px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.link { border: 0; background: none; padding: 6px 0; color: var(--info); font-weight: 600; font-size: 14px; }
+input[type=text], input[type=tel], input[type=number], input[type=date], input[type=password], select {
+  font: inherit; font-size: 16px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0 14px; min-height: 48px; min-width: 0; width: 100%; }
+input:focus-visible, button:focus-visible, .chip-p:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* Hero (landing) */
+.hero { background: var(--hero); color: var(--hero-ink); border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 9px; position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; right: -60px; top: -60px; width: 200px; height: 200px; border-radius: 50%; border: 2px solid var(--hero-line); pointer-events: none; }
+.hero .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.hero h1 { font-size: 32px; line-height: .95; font-weight: 800; text-transform: uppercase; }
+.hero-row.ttl { align-items: flex-start; flex-wrap: nowrap; }
+.hero .sub { color: var(--hero-muted); font-size: 15px; }
+.hero-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.spots { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: .02em; }
+.spots b { color: var(--accent); font-size: 26px; }
+.meter { display: flex; gap: 3px; }
+.meter i { flex: 1; height: 6px; border-radius: 2px; background: var(--hero-line); }
+.meter i.on { background: var(--accent); }
+.meter i.wl { background: var(--hero-muted); }
+.pill { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; white-space: nowrap; letter-spacing: .02em; }
+.pill.open { background: rgba(76,196,143,.16); color: #4cc48f; }
+.pill.locked { background: rgba(242,122,63,.18); color: #f6a072; }
+.pill.full { background: rgba(165,175,186,.18); color: var(--hero-muted); }
+
+/* RSVP: one component for join / maybe / guest / waitlist / drop */
+.rsvp { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.rsvp h3 { font-size: 24px; font-weight: 700; line-height: 1.1; }
+.rsvp .status { display: flex; align-items: center; gap: 12px; }
+.rsvp .badge-big { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 26px; flex: none; }
+.rsvp.in .badge-big { background: var(--good-soft); color: var(--good); }
+.rsvp.wl .badge-big { background: var(--warn-soft); color: var(--warn); }
+.rsvp.out .badge-big { background: var(--surface-2); color: var(--muted); }
+.rsvp .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.rsvp .actions .wide { grid-column: 1 / -1; }
+.rsvp .guests { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
+.tag.t { background: var(--warn-soft); color: var(--warn); }
+.tag.g { border-color: var(--line); color: var(--muted); }
+.tag.you { background: var(--info-soft); color: var(--info); }
+.tag.paid { background: var(--good-soft); color: var(--good); }
+.tag.claim { background: var(--info-soft); color: var(--info); }
+.tag.pend { background: var(--warn-soft); color: var(--warn); }
+.guest-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.v2note { font-size: 12px; color: var(--muted); text-align: center; }
+
+/* Cards */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.card-head h3 { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.faces { display: flex; flex-wrap: wrap; gap: 6px; }
+.face { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); font-size: 14px; font-weight: 600; }
+.face .av { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: var(--accent-soft); color: var(--accent); }
+.face.me { border-color: var(--info); }
+.pay { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pay code { font: 600 15px var(--font-body); background: var(--surface-2); border: 1px solid var(--line); padding: 6px 10px; border-radius: 8px; word-break: break-all; user-select: all; }
+.bill-amt { font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: 1; }
+.bill-amt small { font-size: 18px; color: var(--muted); font-weight: 700; margin-left: 6px; }
+.payrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.payrow .wide { grid-column: 1 / -1; }
+a.btn { text-decoration: none; color: inherit; font-weight: 600; }
+a.btn.primary { color: var(--accent-ink); }
+.upi-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; }
+.upi-line code { font: 600 15px var(--font-body); background: var(--surface-2); border: 1px solid var(--line); padding: 6px 10px; border-radius: 8px; word-break: break-all; user-select: all; }
+.done-note { background: var(--good-soft); color: var(--good); border-radius: 12px; padding: 10px 12px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.gamebar { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 10px; scrollbar-width: none; }
+.gamebar::-webkit-scrollbar { display: none; }
+.gchip { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 8px 12px; text-align: left; display: flex; flex-direction: column; gap: 1px; min-width: 112px; }
+.gchip b { font-family: var(--font-display); font-size: 17px; letter-spacing: .02em; }
+.gchip span { font-size: 12px; font-weight: 600; color: var(--muted); }
+.gchip.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.gchip.due span { color: var(--warn); }
+.gchip.add { border-style: dashed; border-color: var(--accent); color: var(--accent); justify-content: center; align-items: center; min-width: 96px; }
+.gchip.add b { color: var(--accent); }
+.gchip.done-c { background: var(--surface-2); }
+.done-list { list-style: none; margin: 0; padding: 0; }
+.done-list li { border-bottom: 1px solid var(--line); }
+.done-list button { width: 100%; border: 0; background: none; text-align: left; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.done-list b { display: block; font-size: 16px; }
+.done-list span { display: block; }
+.dues { display: flex; flex-direction: column; gap: 6px; }
+.duestrip { display: flex; align-items: center; gap: 8px; background: var(--warn-soft); color: var(--warn); border-radius: 12px; padding: 8px 10px; font-size: 14px; font-weight: 600; }
+.duestrip .btn { margin-left: auto; }
+.stg { display: flex; gap: 4px; }
+.stg span { flex: 1; display: flex; flex-direction: column; gap: 4px; font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--hero-muted); opacity: .6; }
+.stg span::before { content: ""; height: 3px; border-radius: 2px; background: var(--hero-line); }
+.stg span.pa { opacity: 1; }
+.stg span.pa::before { background: var(--hero-muted); }
+.stg span.n { color: var(--hero-ink); opacity: 1; }
+.stg span.n::before { background: var(--accent); }
+.btn.quiet { min-height: 32px; border: 0; background: none; padding: 4px 0; font-size: 14px; font-weight: 500; color: var(--muted); justify-content: flex-start; }
+.btn.quiet.danger { color: var(--accent); background: none; }
+.btn.quiet.center { align-self: center; }
+.rsvp .links { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; }
+.rsvp .links:empty { display: none; }
+.next-hint { font-size: 13px; color: var(--muted); }
+.next-game { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.teams2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.tm2 { border-radius: 12px; padding: 8px; display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--line); background: var(--surface-2); }
+.tm2.b { background: var(--jb-bg); color: var(--jb-ink); border-color: var(--jb-line); }
+.tm2 h4 { margin: 0; font-family: var(--font-display); text-transform: uppercase; display: flex; justify-content: space-between; }
+.tm2 span { font-size: 14px; padding: 4px 7px; border-radius: 7px; background: var(--surface); }
+.tm2.b span { background: var(--jb-chip); }
+.tm2 span.me { outline: 2px solid var(--accent); font-weight: 700; }
+.rsvp.good { background: var(--good-soft); border-color: transparent; }
+.quiet-card { padding: 10px 16px; }
+.upi-line { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.upi-line code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; font: 600 14px var(--font-body); background: var(--surface-2); border: 1px solid var(--line); padding: 5px 8px; border-radius: 8px; user-select: all; }
+.bill-amt.due { font-size: 30px; }
+.paywho { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--line); padding-top: 10px; }
+.pw-h { display: block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.pw-names { display: flex; flex-wrap: wrap; gap: 6px; }
+.pw-names .tag { font-size: 13px; padding: 3px 9px; }
+.progress { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--good); border-radius: 4px; }
+
+/* Roster list */
+.list-h { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 6px; }
+.list-h h3 { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+ol.roster { list-style: none; margin: 0; padding: 0; }
+ol.roster li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 56px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+ol.roster li.me { background: linear-gradient(90deg, var(--info-soft), transparent 75%); }
+ol.roster li.empty { display: block; color: var(--muted); font-size: 14px; padding: 14px 0; min-height: 0; }
+.jn { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--muted); text-align: right; }
+.who { min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.who b { font-weight: 600; overflow-wrap: anywhere; }
+.acts { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
+.copyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* Team playground */
+.balance { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; text-transform: uppercase; }
+.balance .w, .balance .b { font-size: 22px; letter-spacing: .04em; display: flex; align-items: baseline; gap: 8px; }
+.balance .b { justify-content: flex-end; }
+.balance .n { font-size: 40px; line-height: 1; }
+.balance .vs { font-size: 14px; color: var(--muted); text-align: center; line-height: 1.1; }
+.balance .vs.ok { color: var(--good); }
+.balance .vs.off { color: var(--warn); }
+.mode { font-size: 13px; border-radius: 12px; padding: 10px 12px; display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.mode.live { background: var(--good-soft); color: var(--good); }
+.mode.sketch { background: var(--info-soft); color: var(--info); }
+.mode .link { color: inherit; text-decoration: underline; padding: 0; }
+.court { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-radius: 18px; overflow: hidden; border: 1px solid var(--jw-line); }
+.box { min-height: 220px; padding: 10px 8px 12px; display: flex; flex-direction: column; gap: 6px; position: relative; transition: box-shadow .15s; }
+.box.white { background: var(--jw-bg); color: var(--jw-ink); }
+.box.black { background: var(--jb-bg); color: var(--jb-ink); }
+.box-h { font-family: var(--font-display); font-weight: 800; font-size: 16px; letter-spacing: .1em; text-transform: uppercase; opacity: .7; padding: 0 4px 2px; display: flex; justify-content: space-between; }
+.box ul, .bench ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.box .drop-hint { margin-top: auto; border: 2px dashed currentColor; opacity: .25; border-radius: 12px; min-height: 48px; display: grid; place-items: center; font-size: 13px; font-weight: 600; }
+.court.has-sel .box .drop-hint { opacity: .6; }
+.chip-p { min-height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 10px; border-radius: 12px; border: 1.5px solid transparent; font-weight: 600; font-size: 15px; cursor: pointer;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: manipulation; transition: transform .12s, box-shadow .12s; }
+.chip-p .no { font-family: var(--font-display); font-size: 15px; opacity: .5; width: 14px; text-align: right; flex: none; }
+.chip-p .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip-p .swap { flex: none; font-size: 13px; font-weight: 700; color: var(--accent); }
+.box.white .chip-p { background: var(--jw-chip); border-color: var(--jw-line); color: var(--jw-ink); box-shadow: 0 1px 0 rgba(0,0,0,.04); }
+.box.black .chip-p { background: var(--jb-chip); border-color: var(--jb-line); color: var(--jb-ink); }
+.bench .chip-p { background: var(--surface); border-color: var(--line); color: var(--ink); }
+.chip-p.sel { border-color: var(--accent) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); transform: scale(1.02); }
+.chip-p.target .swap { visibility: visible; }
+.chip-p .swap { visibility: hidden; }
+.court.has-sel .box:not(.src) { box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent); }
+.over { box-shadow: inset 0 0 0 3px var(--accent) !important; }
+.chip-p.lifting { opacity: .3; }
+.chip-p.ghost { position: fixed; z-index: 50; pointer-events: none; background: var(--surface); color: var(--ink); border-color: var(--accent); box-shadow: 0 12px 30px rgba(0,0,0,.3); transform: rotate(-2deg) scale(1.05); }
+.bench { background: var(--surface); border: 1px dashed var(--line); border-radius: 18px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.bench ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.bench-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--muted); padding: 0 2px; }
+.tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.result { display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 8px; align-items: center; }
+.result .btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+body.dragging, body.dragging * { cursor: grabbing !important; }
+
+/* Stats */
+.tbl { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+.tbl th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; padding: 8px 6px; border-bottom: 2px solid var(--ink); white-space: nowrap; }
+.tbl td { padding: 9px 6px; border-bottom: 1px solid var(--line); }
+.tbl .n { text-align: right; }
+ul.games { list-style: none; margin: 0; padding: 0; }
+ul.games li { padding: 12px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
+ul.games .gh { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-weight: 700; }
+
+/* Sheet */
+.scrim { position: fixed; inset: 0; background: rgba(8,12,16,.5); z-index: 40; display: flex; align-items: flex-end; justify-content: center; }
+.sheet { background: var(--surface); width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; border-radius: 20px 20px 0 0; padding: 10px 16px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; }
+.sheet .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 0 auto 4px; }
+.sheet-h { display: flex; justify-content: space-between; align-items: center; }
+.sheet-h h3 { font-size: 24px; font-weight: 800; text-transform: uppercase; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid2 label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); font-weight: 600; min-width: 0; }
+.grid2 .full { grid-column: 1 / -1; }
+.banner { font-size: 13px; border-radius: 12px; padding: 10px 12px; background: var(--warn-soft); color: var(--warn); }
+.fb-open { align-self: center; margin-top: 8px; color: var(--muted); }
+#fb-bottom { display: flex; margin: 16px auto 0; }
+.app-ver { text-align: center; margin-top: 2px; }
+.av img, .pav img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+.me-chip .av, .face .av { overflow: hidden; }
+.pav { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: inline-grid; place-items: center; font-weight: 700; font-size: 12px; flex: none; overflow: hidden; border: 0; padding: 0; cursor: pointer; font-family: inherit; }
+.pav.big { width: 76px; height: 76px; font-size: 26px; cursor: default; }
+.prof-top { display: flex; align-items: center; gap: 14px; }
+.prof-top .btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.prof-facts { display: grid; gap: 8px; }
+.prof-facts div { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--line); padding: 6px 0; }
+textarea.fb-text { width: 100%; font: inherit; font-size: 16px; border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: var(--surface); color: var(--ink); resize: vertical; min-height: 120px; }
+.fb-list { list-style: none; margin: 0; padding: 0; }
+.fb-list li { padding: 10px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.fb-list .fh { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.fb-list p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+textarea.fallback { width: 100%; font: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 12px; padding: 10px; background: var(--surface); color: var(--ink); }
+#toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tabs-h) + 14px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; font-size: 14px; max-width: calc(100% - 32px); z-index: 60; box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+/* Phase 2: switcher, three tabs, Players/Group screens, organiser to-do */
+.sw { margin-right: auto; min-width: 0; border: 0; background: none; padding: 0; text-align: left; display: flex; flex-direction: column; min-height: 44px; justify-content: center; color: var(--ink); }
+.sw small { font-size: 12px; font-weight: 700; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .02em; }
+.sw b { font-family: var(--font-display); font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sw b i { font-style: normal; color: var(--muted); font-size: 16px; margin-left: 4px; }
+.me-chip.solo { padding: 0; width: 40px; height: 40px; justify-content: center; }
+.me-chip.solo .av { width: 36px; height: 36px; font-size: 14px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tabs-in.t3 { grid-template-columns: repeat(3, 1fr); }
+.segc { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 3px; }
+.segc button { border: 0; background: none; min-height: 38px; border-radius: 9px; font-size: 15px; color: var(--muted); }
+.segc button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.more { width: 40px; height: 36px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-size: 18px; line-height: 1; padding: 0; }
+.who-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 8px 12px; width: 100%; text-align: left; font-size: 14px; font-weight: 600; min-height: 48px; }
+.who-row .stack { display: flex; }
+.who-row .stack .av { width: 26px; height: 26px; border-radius: 50%; margin-left: -6px; border: 2px solid var(--surface); background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 10px; font-weight: 700; overflow: hidden; }
+.who-row .stack .av:first-child { margin-left: 0; }
+.who-row .ch { margin-left: auto; color: var(--muted); font-size: 18px; }
+.todo-h { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.steps > li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+.steps > li:first-child { border-top: 0; }
+.steps .ic { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-size: 12px; font-weight: 800; margin-top: 1px; }
+.steps li.dn .ic { background: var(--good-soft); border-color: transparent; color: var(--good); }
+.steps li.nw .ic { border-color: var(--accent); background: var(--accent-soft); }
+.steps li.lt { color: var(--muted); }
+.steps li.ms .ic { border-style: dashed; }
+.steps .x { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.steps .x > b { font-size: 16px; }
+.steps .x > span.t { font-weight: 600; }
+.steps .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.steps .row .btn { flex: 1 1 auto; }
+.steps .lk { align-self: flex-start; }
+.res3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.res3 .btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.cl { list-style: none; margin: 0; padding: 0; }
+.cl li { display: flex; align-items: center; gap: 8px; min-height: 48px; border-bottom: 1px solid var(--line); flex-wrap: wrap; padding: 4px 0; }
+.cl li b { font-weight: 600; margin-right: auto; }
+.prev { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
+.prev b { font-size: 17px; }
+.kv { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; gap: 10px; min-height: 52px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.kv > span { color: var(--muted); font-weight: 600; }
+.stp { display: inline-flex; align-items: center; gap: 14px; }
+.stp button { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-size: 22px; padding: 0; }
+.stp output { font-family: var(--font-display); font-size: 26px; font-weight: 800; min-width: 32px; text-align: center; }
+.big-amt { font-family: var(--font-display); font-size: 34px !important; font-weight: 800; min-height: 64px !important; }
+.stat3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat3 div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+.stat3 b { font-family: var(--font-display); font-size: 28px; font-weight: 800; line-height: 1; }
+.stat3 span { font-size: 12px; color: var(--muted); font-weight: 600; }
+.menu { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.menu > button, .menu > a { width: 100%; border: 0; border-top: 1px solid var(--line); background: none; min-height: 52px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 16px; font-weight: 600; text-decoration: none; color: var(--ink); text-align: left; }
+.menu > :first-child { border-top: 0; }
+.menu .r { color: var(--muted); font-size: 14px; font-weight: 500; white-space: nowrap; }
+.menu-h { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 4px 4px 0; }
+.gl { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); width: 100%; text-align: left; color: var(--ink); text-decoration: none; }
+.gl.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.gl .dt { width: 46px; flex: none; text-align: center; font-family: var(--font-display); font-weight: 800; font-size: 20px; line-height: .95; text-transform: uppercase; }
+.gl .dt small { display: block; font-size: 13px; color: var(--muted); }
+.gl .x { display: flex; flex-direction: column; min-width: 0; margin-right: auto; }
+.gl .x span { font-size: 13px; color: var(--muted); font-weight: 500; }
+.gl.due .x span { color: var(--warn); }
+.tm3 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.tm3 .col { min-width: 0; border-radius: 16px; padding: 10px 8px; display: flex; flex-direction: column; gap: 6px; border: 1px solid var(--jw-line); background: var(--jw-bg); color: var(--jw-ink); }
+.tm3 .col.b { background: var(--jb-bg); color: var(--jb-ink); border-color: var(--jb-line); }
+.tm3 .col h4 { margin: 0 4px 2px; font-family: var(--font-display); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; display: flex; justify-content: space-between; font-size: 16px; }
+.tm3 .col button { min-width: 0; max-width: 100%; min-height: 46px; border-radius: 12px; border: 1.5px solid var(--jw-line); background: var(--jw-chip); color: var(--jw-ink); text-align: left; padding: 0 10px; font-size: 15px; display: flex; align-items: center; gap: 6px; overflow: hidden; }
+.tm3 .col.b button { background: var(--jb-chip); border-color: var(--jb-line); color: var(--jb-ink); }
+.tm3 .col button .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tm3 .col button .mv { opacity: .45; font-size: 13px; }
+.tm3 .col button.me { border-color: var(--accent); }
+.tm3 .col .empty { font-size: 13px; opacity: .6; padding: 6px 4px; }
+.unp { display: flex; flex-wrap: wrap; gap: 6px; }
+.unp button { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-height: 44px; border-radius: 12px; border: 1px dashed var(--line); background: var(--surface); padding: 0 12px; font-size: 15px; }
+.tbar { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 20px; letter-spacing: .03em; }
+.tbar .ok { color: var(--good); } .tbar .off { color: var(--warn); }
+@media (max-width: 400px) { .brand { font-size: 17px; } .brand-t { display: none; } }
+@media (max-width: 370px) { .hero h1 { font-size: 28px; } .balance .n { font-size: 32px; } .tools { grid-template-columns: 1fr 1fr; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <button type="button" class="sw" id="sw-btn" aria-label="Switch game or group"><small id="sw-group">Smackdown</small><b><span id="sw-game">Loading</span><i aria-hidden="true">▾</i></b></button>
+    <button type="button" class="me-chip solo" id="me-chip" aria-label="Your name"><span class="av" id="me-av">?</span><span class="sr" id="me-name">Your name</span></button>
+  </div>
+</header>
+
+<main>
+  <div class="banner" id="demo" hidden>Demo mode: the shared list isn't connected, so changes stay on this phone.</div>
+
+  <!-- GAME -->
+  <section class="screen" data-screen="home" id="s-home">
+    <div class="dues" id="dues" hidden></div>
+    <div class="hero">
+      <div class="stg" id="g-stg"><span>Sign-up</span><span>Locked</span><span>Game</span><span>Pay</span><span>Done</span></div>
+      <span class="eyebrow" id="g-eyebrow" hidden>Friday Night Smackdown</span>
+      <div class="hero-row ttl"><h1 id="g-title">Loading…</h1><span class="pill open" id="g-state">Open</span></div>
+      <div class="sub" id="g-sub"></div>
+      <div class="meter" id="meter" aria-hidden="true"></div>
+      <div class="hero-row"><span class="spots" id="g-spots"></span><span class="sub small" id="g-wl"></span></div>
+    </div>
+
+    <div class="rsvp" id="rsvp"></div>
+
+    <div class="card" id="home-pay" hidden></div>
+    <div class="card" id="collect" hidden></div>
+    <div class="card" id="todo" hidden></div>
+
+    <button type="button" class="who-row" id="home-in" data-go="players"><span class="stack" id="faces"></span><span id="home-in-t"></span><span class="ch" aria-hidden="true">›</span></button>
+  </section>
+
+  <!-- PLAYERS: list and teams -->
+  <section class="screen" data-screen="players" id="s-players" hidden>
+    <div class="screen-head"><h2>Players</h2><span class="small muted num" id="h-in"></span></div>
+    <div class="segc" role="group" aria-label="Show"><button type="button" id="pv-list" aria-pressed="true">List</button><button type="button" id="pv-teams" aria-pressed="false">Teams</button></div>
+    <div class="screen" id="v-list">
+      <div>
+        <div class="list-h"><h3>Playing</h3><span class="tiny muted">in order of joining</span></div>
+        <ol class="roster" id="l-in"></ol>
+      </div>
+      <div id="sec-wl">
+        <div class="list-h"><h3>Waitlist</h3><span class="tiny muted">moves up by itself</span></div>
+        <ol class="roster" id="l-wl"></ol>
+      </div>
+      <div id="sec-out" hidden>
+        <div class="list-h"><h3>Dropped out</h3><span class="tiny muted">after lock = still pays</span></div>
+        <ol class="roster" id="l-out"></ol>
+      </div>
+      <div class="copyrow">
+        <button type="button" class="btn" id="copy-list">Copy list</button>
+        <button type="button" class="btn" id="copy-pend">Copy reminder for WhatsApp</button>
+      </div>
+    </div>
+    <div class="screen" id="v-teams" hidden>
+      <div class="mode" id="mode"></div>
+      <div class="tbar"><span class="num" id="bal-n">0 v 0</span><span id="bal">vs</span></div>
+      <div class="tm3">
+        <div class="col" id="z-white"><h4><span>⚪ White</span><span class="num" id="n-white">0</span></h4><div id="t-white"></div></div>
+        <div class="col b" id="z-black"><h4><span>⚫ Black</span><span class="num" id="n-black">0</span></h4><div id="t-black"></div></div>
+      </div>
+      <div class="bench" id="z-bench">
+        <div class="bench-h"><span>Not picked yet · <b class="num" id="n-bench">0</b></span><span>tap to add to the smaller side</span></div>
+        <div class="unp" id="t-bench"></div>
+      </div>
+      <p class="small muted" id="team-help" style="text-align:center;margin:0">Tap a name to move it to the other side.</p>
+      <div class="copyrow">
+        <button type="button" class="btn" id="t-shuffle">Shuffle</button>
+        <button type="button" class="btn primary" id="copy-teams">Share teams</button>
+      </div>
+      <button type="button" class="btn quiet center" id="t-clear">Clear teams</button>
+    </div>
+  </section>
+
+  <!-- GROUP -->
+  <section class="screen" data-screen="group" id="s-group" hidden>
+    <div class="screen-head"><h2 id="grp-title">Group</h2><span class="small muted" id="past-sub"></span></div>
+    <div class="stat3" id="my-stats"></div>
+    <div class="card" id="stats-card">
+      <div class="card-head"><h3>Leaderboard</h3></div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <thead><tr><th>Player</th><th class="n">Played</th><th class="n">Won</th><th class="n">Lost</th><th class="n">Rs*</th></tr></thead>
+          <tbody id="stats-body"></tbody>
+        </table>
+      </div>
+      <button type="button" class="btn sm" id="lb-more" hidden>Show everyone</button>
+      <p class="tiny muted" style="margin:0">* Games up to 23 Oct 2026 come from the WhatsApp chat: who was on the final list, and the per-head cost when someone posted it. The chat doesn't record winners or who actually paid, so those games show no result and Rs is an estimate (cost of the games played). New games use the app's paid ticks and winner.</p>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Past games</h3></div>
+      <ul class="games" id="games"></ul>
+      <button type="button" class="btn sm" id="games-more" hidden>Show all games</button>
+    </div>
+    <div class="menu" id="grp-menu">
+      <button type="button" id="m-completed">Completed games<span class="r" id="m-completed-n">›</span></button>
+      <button type="button" id="m-members">Members<span class="r" id="m-members-n">›</span></button>
+      <button type="button" id="m-link">Copy group link<span class="r">›</span></button>
+      <button type="button" id="fb-open">Send feedback<span class="r">›</span></button>
+      <button type="button" id="m-switch">Switch group<span class="r" id="m-switch-n">›</span></button>
+    </div>
+    <div class="menu-h">Organisers</div>
+    <div class="menu" id="org-menu"></div>
+  </section>
+
+  <button type="button" class="btn ghost sm fb-open" id="fb-bottom">💬 Send feedback</button>
+  <div class="tiny muted app-ver" id="app-ver"></div>
+  <textarea class="fallback" id="copy-fallback" hidden readonly rows="8" style="margin-top:12px"></textarea>
+</main>
+
+<nav class="tabs" aria-label="Screens">
+  <div class="tabs-in t3">
+    <button type="button" class="tab" data-go="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M6 5.5c3 3.5 3 9.5 0 13M18 5.5c-3 3.5-3 9.5 0 13"/></svg>Game</button>
+    <button type="button" class="tab" data-go="players"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14c2.8 0 5 2.2 5 5"/></svg>Players<span class="badge" id="tab-count" hidden></span></button>
+    <button type="button" class="tab" data-go="group"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Group</button>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div id="toast" role="status" hidden></div>
+
+<script src="config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script>
+function makeFirestore(cfg) {
+  firebase.initializeApp(cfg);
+  const fs = firebase.firestore();
+  const norm = (o) => { const r = {}; for (const k in o) { const v = o[k]; r[k] = v && typeof v.toMillis === "function" ? v.toMillis() : v; } return r; };
+  const opts = { serverTimestamps: "estimate" };
+  // Everyone gets signed in: Google if they chose it, otherwise an automatic anonymous account.
+  // The database rules use that account to know whose row is whose and who the admins are.
+  let authDone;
+  const authReady = new Promise((r) => { authDone = r; });
+  if (firebase.auth) {
+    setTimeout(() => authDone(), 6000); // never hold a save forever (offline, or anonymous sign-in switched off)
+    let redirecting = false; try { redirecting = !!sessionStorage.getItem("smackdown-redirect"); } catch (e) {}
+    const waitRedirect = redirecting ? firebase.auth().getRedirectResult().catch(() => {}) : Promise.resolve();
+    firebase.auth().onAuthStateChanged((u) => {
+      if (u) { authDone(); return; }
+      waitRedirect.then(() => { if (!firebase.auth().currentUser) return firebase.auth().signInAnonymously(); }).catch((e) => { console.warn("Anonymous sign-in failed", e && e.code); authDone(); });
+    });
+  } else authDone();
+  const ready = (f) => (...a) => authReady.then(() => f(...a));
+  // Google sign-in. Popup first; phones that block popups fall back to a full-page redirect.
+  const auth = firebase.auth ? {
+    // The page only hears about Google accounts; the anonymous one stays behind the scenes
+    onChange: (cb) => firebase.auth().onAuthStateChanged((u) => cb(u && !u.isAnonymous ? u : null)),
+    signIn: async () => {
+      const pr = new firebase.auth.GoogleAuthProvider(); pr.setCustomParameters({ prompt: "select_account" });
+      try { return await firebase.auth().signInWithPopup(pr); }
+      catch (e) {
+        if (e && (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment")) { try { sessionStorage.setItem("smackdown-redirect", "1"); } catch (x) {} return firebase.auth().signInWithRedirect(pr); }
+        throw e;
+      }
+    },
+    redirectResult: () => firebase.auth().getRedirectResult(),
+    signOut: () => firebase.auth().signOut()
+  } : null;
+  return {
+    live: true,
+    auth,
+    uid: () => (firebase.auth && firebase.auth().currentUser ? firebase.auth().currentUser.uid : null),
+    now: () => firebase.firestore.FieldValue.serverTimestamp(),
+    doc: (p) => ({
+      onSnapshot: (cb, err) => fs.doc(p).onSnapshot((s) => cb({ exists: s.exists, data: () => norm(s.data(opts) || {}) }), err),
+      set: ready((o) => fs.doc(p).set(o)), merge: ready((o) => fs.doc(p).set(o, { merge: true })), update: ready((o) => fs.doc(p).update(o)), delete: ready(() => fs.doc(p).delete()),
+      // Create only: fails with "exists" instead of overwriting someone else's row
+      create: ready((o) => fs.runTransaction(async (t) => { const r = fs.doc(p), s = await t.get(r); if (s.exists) { const e = new Error("exists"); e.code = "exists"; throw e; } t.set(r, o); })),
+      get: () => fs.doc(p).get().then((s) => (s.exists ? norm(s.data(opts)) : null))
+    }),
+    collection: (p) => ({
+      onSnapshot: (cb, err) => fs.collection(p).onSnapshot((s) => cb({ docs: s.docs.map((d) => ({ id: d.id, data: () => norm(d.data(opts)) })) }), err),
+      fetch: () => fs.collection(p).get({ source: "server" }).then((s) => s.docs.map((d) => Object.assign({}, norm(d.data(opts)), { id: d.id }))),
+      add: ready((o) => fs.collection(p).add(o))
+    }),
+    batch: () => { const b = fs.batch(); return {
+      set: (p, o) => b.set(fs.doc(p), o), update: (p, o) => b.update(fs.doc(p), o), delete: (p) => b.delete(fs.doc(p)), commit: ready(() => b.commit()) }; }
+  };
+}
+function makeLocal() {
+  const KEY = "smackdown-demo-v1", NOW = { __now: 1 };
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
+  let docs = load();
+  const subs = new Set();
+  const fix = (o) => { const r = {}; for (const k in o) r[k] = o[k] === NOW ? Date.now() : o[k]; return r; };
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(docs)); } catch (e) {} subs.forEach((f) => f()); };
+  window.addEventListener("storage", (e) => { if (e.key === KEY) { docs = load(); subs.forEach((f) => f()); } });
+  const parent = (p) => p.split("/").slice(0, -1).join("/");
+  const ops = {
+    set: (p, o) => { docs[p] = fix(o); }, update: (p, o) => { if (!docs[p]) throw new Error("missing"); docs[p] = Object.assign({}, docs[p], fix(o)); },
+    delete: (p) => { delete docs[p]; }
+  };
+  const later = (f) => new Promise((res, rej) => setTimeout(() => { try { f(); save(); res(); } catch (e) { rej(e); } }, 60));
+  return {
+    now: () => NOW,
+    doc: (p) => ({
+      onSnapshot: (cb) => { const f = () => cb({ exists: !!docs[p], data: () => Object.assign({}, docs[p]) }); subs.add(f); f(); },
+      set: (o) => later(() => ops.set(p, o)), create: (o) => later(() => { if (docs[p]) { const e = new Error("exists"); e.code = "exists"; throw e; } ops.set(p, o); }), merge: (o) => later(() => { docs[p] = Object.assign({}, docs[p] || {}, fix(o)); }), update: (o) => later(() => ops.update(p, o)), delete: () => later(() => ops.delete(p)),
+      get: () => Promise.resolve(docs[p] ? Object.assign({}, docs[p]) : null)
+    }),
+    collection: (p) => ({
+      onSnapshot: (cb) => { const f = () => cb({ docs: Object.keys(docs).filter((k) => parent(k) === p).map((k) => ({ id: k.split("/").pop(), data: () => Object.assign({}, docs[k]) })) }); subs.add(f); f(); },
+      add: (o) => later(() => ops.set(p + "/" + Math.random().toString(36).slice(2, 12), o)),
+      fetch: () => Promise.resolve(Object.keys(docs).filter((k) => parent(k) === p).map((k) => Object.assign({}, docs[k], { id: k.split("/").pop() })))
+    }),
+    batch: () => { const q = []; return {
+      set: (p, o) => q.push(() => ops.set(p, o)), update: (p, o) => q.push(() => ops.update(p, o)), delete: (p) => q.push(() => ops.delete(p)),
+      commit: () => later(() => q.forEach((f) => f())) }; }
+  };
+}
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const cfg = window.SMACKDOWN_FIREBASE || {};
+  const live = !!(cfg.apiKey && cfg.projectId && window.firebase);
+  let db;
+  try { db = live ? makeFirestore(cfg) : makeLocal(); } catch (e) { db = makeLocal(); }
+  $("demo").hidden = !!db.live;
+
+  // Each game is its own doc games/{id} with a players subcollection. "current" is the original single game.
+  let SETTINGS = null, PLAYERS = null; // set by selectGame; nothing is written before a game is loaded
+  // Groups: the link ?g=monday picks a group. No ?g means the original Friday group, which keeps its old doc ids.
+  // Other groups tag their game docs with { group } and use ids like "monday--g-2026-11-02".
+  const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const slugify = (t) => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 20);
+  const GROUP = slugify(new URLSearchParams(location.search).get("g")) || "friday";
+  const MAIN = GROUP === "friday";
+  const CONFIG = MAIN ? "games/config" : "games/config-" + GROUP;
+  const FEEDBACK = MAIN ? "games/feedback/players" : "games/feedback-" + GROUP + "/players";
+  // Activity log: one record per change (who, what, when). Profiles of Google accounts are shared by all groups.
+  const ACTIVITY = MAIN ? "games/activity/players" : "games/activity-" + GROUP + "/players";
+  const PROFILES = "games/users/players";
+  const CAPT_KEY = MAIN ? "smackdown-captain" : "smackdown-captain-" + GROUP;
+  const PRESETS = { monday: { weekday: 1, time: "9 pm" } };
+  const gameIdFor = (date) => (MAIN ? "" : GROUP + "--") + "g-" + date;
+  const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const state = { games: {}, playersBy: {}, joining: false, gid: null, picked: false, config: {}, configs: {}, groupsSeen: new Set(), gamesReady: false, subscribed: new Set(), completing: new Set(), creating: false,
+    settings: null, players: [], history: [], imported: [], feedback: [], showAllGames: false, ready: false, busy: new Set(), pendingRender: false, sel: null, guestOpen: false, profiles: {}, pview: "list", tally: [], showAllLb: false };
+  const APP_VERSION = "v25";
+
+  const ls = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+  // Who is using this phone: { name, uid, email }. uid and email are set once they sign in with Google.
+  let me = ls.get("smackdown-profile", { name: "", uid: null });
+  let mine = new Set(ls.get("smackdown-mine", []));
+  let captHash = ls.get(CAPT_KEY, null);
+  let sketch = ls.get("smackdown-sketch", {}); // player id -> team, for non-captain play-around
+  const pinHash = () => state.config.pinHash || (MAIN && state.games.current && state.games.current.pinHash) || null;
+  // Admins (Google accounts) replace the PIN: once a group has an admin, only signed-in admins get captain powers.
+  const admins = () => (state.config && state.config.admins) || {};
+  const hasAdmins = () => Object.keys(admins()).length > 0;
+  const isAdmin = () => !!(me.uid && admins()[me.uid]);
+  const isCaptain = () => hasAdmins() ? isAdmin() : !!(pinHash() && captHash === pinHash());
+  const captainOnly = () => hasAdmins() ? (me.uid ? "Admins only. Ask an admin to make you one." : "Admins only. Sign in with Google in the Group tab.") : "Organisers only. Unlock organiser tools in the Group tab.";
+  const saveMine = () => ls.set("smackdown-mine", Array.from(mine));
+  // The account this browser writes with (Google, or the automatic anonymous one)
+  const authUid = () => (db.uid ? db.uid() : null);
+  // Rows belong to the phone/account that made them. In a group with admins, only that phone or an admin can change them.
+  const canEdit = (p) => !db.live || isCaptain() || !hasAdmins() || !p || !p.owner || p.owner === authUid() || (!!p.uid && p.uid === authUid());
+  const notYours = (p) => (p && p.name ? p.name + " was" : "That was") + " added from another phone or browser. Change it there" + (p && p.uid ? " or sign in with that Google account" : "") + ", or ask an admin.";
+
+  let toastTimer;
+  function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 2800); }
+  function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function btn(cls, text, onclick, disabled) { const b = el("button", cls, text); b.type = "button"; if (onclick) b.onclick = onclick; if (disabled) b.disabled = true; return b; }
+  const initials = (n) => String(n || "?").trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase() || "?";
+  /* ---------- Profiles: name, photo, position, phone, UPI (games/users/players/{uid}) ---------- */
+  const POSITIONS = ["Guard", "Forward", "Center", "Anywhere"];
+  const myProf = () => (me.uid && state.profiles[me.uid]) || null;
+  // A list row's profile: by account for signed-in rows, else by name (guests only by name)
+  function profOf(p) {
+    if (!p) return null;
+    const P = state.profiles;
+    if (!p.guestOf && p.uid && P[p.uid]) return P[p.uid];
+    if (p.name) for (const k in P) if (P[k].name && same(P[k].name, p.name)) return P[k];
+    return null;
+  }
+  const photoOf = (pr) => (pr ? pr.photo || (pr.noPhoto ? "" : pr.gphoto || "") : "");
+  function fillAv(node, name, src) {
+    node.textContent = "";
+    if (src) { const i = el("img"); i.alt = ""; i.referrerPolicy = "no-referrer"; i.src = src; i.onerror = () => { node.textContent = initials(name); }; node.appendChild(i); }
+    else node.textContent = name ? initials(name) : "?";
+    return node;
+  }
+  const avatar = (tag, cls, name, pr) => fillAv(el(tag, cls), name, photoOf(pr));
+  const same = (a, b) => String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase();
+  function fmtDate(iso, long) {
+    if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return "";
+    const [y, m, d] = iso.split("-").map(Number);
+    const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+    return (long ? ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][dow] : DOW[dow]) + " " + d + " " + MON[m - 1];
+  }
+  // This group's name and usual day, time and court (admin can change them)
+  function groupInfoFor(g, c) {
+    c = c || {};
+    const pre = PRESETS[g] || {}, guess = DAYS.findIndex((d) => g.startsWith(d.slice(0, 3).toLowerCase()));
+    const weekday = Number.isInteger(c.weekday) ? c.weekday : Number.isInteger(pre.weekday) ? pre.weekday : g === "friday" ? 5 : guess >= 0 ? guess : 5;
+    const name = c.name || (g === "friday" ? "Friday Night Smackdown" : DAYS[weekday] + " Night Smackdown");
+    return { group: g, name, weekday, time: c.time != null ? c.time : (pre.time || ""), court: c.court || "" };
+  }
+  const groupInfo = () => groupInfoFor(GROUP, state.config);
+  function nextGameDay() { const d = new Date(); const add = (groupInfo().weekday - d.getDay() + 7) % 7; d.setDate(d.getDate() + add); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  const gameDate = () => (state.settings && state.settings.date) || nextGameDay();
+  // The bill: whoever paid for the court enters the total; it's split equally between everyone who owes (players + late drop-outs)
+  function billInfo(L, gs) {
+    gs = gs || state.settings;
+    const b = gs && gs.bill;
+    if (!b || !(Number(b.total) > 0)) return null;
+    const P = payers(L || lists()), n = Math.max(1, P.length);
+    // The share is fixed when the bill is added; older bills without one fall back to splitting live
+    const share = Number(b.share) > 0 ? Number(b.share) : Math.ceil(Number(b.total) / n);
+    return { total: Number(b.total), upi: b.upi || "", by: b.by || "", n, split: Number(b.share) > 0 && Number(b.n) > 0 ? Number(b.n) : n, share, P };
+  }
+  const upiLink = (bi, amt, date) => "upi://pay?pa=" + encodeURIComponent(bi.upi) + "&pn=" + encodeURIComponent(bi.by || "Smackdown") + "&am=" + (amt || bi.share) + ".00&cu=INR&tn=" + encodeURIComponent("Smackdown " + fmtDate(date || gameDate()));
+  function addDays(iso, n) { const [y, m, d] = iso.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); }
+  async function sha(text) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("smackdown:" + text));
+    return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+  function confirmTap(b, label, ask, ms) {
+    if (b.dataset.armed) { delete b.dataset.armed; b.textContent = label; return true; }
+    b.dataset.armed = "1"; b.textContent = ask;
+    setTimeout(() => { if (b.dataset.armed) { delete b.dataset.armed; b.textContent = label; } }, ms || 4000);
+    return false;
+  }
+
+  function listsFor(gs, players) {
+    const cap = Number(gs && gs.cap) || 14;
+    const t = (p) => (typeof p.joinedAt === "number" ? p.joinedAt : Date.now());
+    const active = players.filter((p) => p.status !== "out").sort((a, b) => t(a) - t(b) || a.id.localeCompare(b.id));
+    const out = players.filter((p) => p.status === "out").sort((a, b) => (a.droppedAt || 0) - (b.droppedAt || 0));
+    // Once the list is locked, anyone who joins after the lock goes to the waitlist
+    const isLate = (p) => !!(gs && gs.locked) && (!!p.late || (typeof gs.lockedAt === "number" && t(p) > gs.lockedAt));
+    const early = active.filter((p) => !isLate(p)), late = active.filter(isLate);
+    const playing = early.slice(0, cap);
+    return { cap, playing, waitlist: early.slice(cap).concat(late), out };
+  }
+  const lists = () => listsFor(state.settings, state.players);
+
+  /* ---------- Games: several can be open at once (next Friday signing up, last Friday still collecting) ---------- */
+  const todayISO = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+  const dateOf = (id) => (state.games[id] && state.games[id].date) || nextGameDay();
+  const byDate = (a, b) => dateOf(a).localeCompare(dateOf(b)) || a.localeCompare(b);
+  const activeIds = () => Object.keys(state.games).filter((id) => !state.games[id].completed).sort(byDate);
+  const RECENT = 4 * 864e5;
+  const shownIds = () => Object.keys(state.games).filter((id) => !state.games[id].completed || (id === state.gid && state.picked)).sort(byDate);
+  const completedIds = () => Object.keys(state.games).filter((id) => state.games[id].completed).sort(byDate).reverse();
+  function gameStatus(id) {
+    const g = state.games[id] || {};
+    if (g.completed) return { key: "done", text: "Completed ✓" };
+    const L = listsFor(g, state.playersBy[id] || []), bi = billInfo(L, g);
+    if (bi) { const left = bi.P.filter((p) => !p.paid && !same(p.name, bi.by)).length; return left ? { key: "due", text: left + " to pay" } : { key: "done", text: "All paid" }; }
+    if (dateOf(id) < todayISO()) return { key: "bill", text: "Bill pending" };
+    return { key: "open", text: g.locked ? "Locked" : L.playing.length >= L.cap ? "Full" : "Open · " + L.playing.length + "/" + L.cap };
+  }
+  function defaultGame() {
+    const act = activeIds(), t = todayISO();
+    return act.find((id) => dateOf(id) >= t) || act[act.length - 1] || null;
+  }
+  function selectGame(id, byUser) {
+    if (byUser) state.picked = true;
+    if (state.gid !== id) { state.sel = null; state.guestOpen = false; }
+    state.gid = id;
+    SETTINGS = "games/" + id; PLAYERS = SETTINGS + "/players";
+    state.settings = state.games[id] || null;
+    state.players = state.playersBy[id] || [];
+  }
+  function syncSelection() {
+    const act = activeIds();
+    if (!state.gid || !state.games[state.gid] || !state.picked) { const d = defaultGame(); if (d) selectGame(d); else { state.gid = null; SETTINGS = PLAYERS = null; state.settings = null; state.players = []; } }
+    else selectGame(state.gid);
+  }
+  function watchPlayers(id) {
+    if (state.subscribed.has(id)) return;
+    state.subscribed.add(id);
+    db.collection("games/" + id + "/players").onSnapshot((snap) => {
+      state.playersBy[id] = snap.docs.map((d) => Object.assign({}, d.data(), { id: d.id }));
+      if (id === state.gid) { state.players = state.playersBy[id]; cleanSketch(); }
+      if (id === state.gid) state.ready = true;
+      checkComplete(id); render();
+    }, lost);
+  }
+  // A game is completed once the bill is in and everyone on it has paid
+  function checkComplete(id) {
+    const g = state.games[id];
+    if (!g || g.completed || state.completing.has(id) || !state.playersBy[id]) return;
+    if (db.live && hasAdmins() && !isCaptain()) return; // an admin's phone closes it
+    const L = listsFor(g, state.playersBy[id]), bi = billInfo(L, g);
+    if (!bi || bi.P.some((p) => !p.paid && !same(p.name, bi.by))) return;
+    state.completing.add(id);
+    const wasOpen = id === state.gid;
+    const strip = (p) => ({ name: p.name, paid: !!p.paid, tentative: !!p.tentative, guestOf: p.guestOf || null, team: p.team || null });
+    db.doc("games/" + id).update({ completed: true, completedAt: Date.now(), date: dateOf(id), fee: bi.share, upi: bi.upi,
+      summary: { playing: L.playing.map(strip), waitlist: L.waitlist.map((p) => p.owes ? { name: p.name, owes: true, paid: !!p.paid } : { name: p.name }), dropped: L.out.map((p) => ({ name: p.name, owes: !!p.owes, paid: !!p.paid })) } })
+      .then(() => { if (wasOpen) toast("Everyone has paid. " + fmtDate(dateOf(id)) + " is completed ✓"); })
+      .catch((e) => { console.error(e); state.completing.delete(id); });
+  }
+  // Keep one upcoming game open: if none is on or after today, open the group's next game day with last game's time, court and spots
+  function ensureUpcoming() {
+    if (state.creating || !state.gamesReady) return;
+    const cur = state.games.current;
+    if (cur && !cur.date && !cur.completed) { state.creating = true; db.doc("games/current").update({ date: nextGameDay() }).finally(() => { state.creating = false; }); return; }
+  }
+  async function createGame(date, quiet, extra) {
+    const id = gameIdFor(date), gi = groupInfo();
+    if (state.games[id]) { if (!quiet) { selectGame(id, true); render(); } return id; }
+    const all = Object.keys(state.games).sort((a, b) => dateOf(b).localeCompare(dateOf(a)));
+    const last = all.length ? state.games[all[0]] : {};
+    state.creating = true;
+    try {
+      await db.doc("games/" + id).set(Object.assign(MAIN ? {} : { group: GROUP }, { date, time: gi.time || last.time || "", court: gi.court || last.court || "", cap: last.cap || 14, captain: last.captain || "", locked: false, winner: null, bill: null, completed: false, createdAt: Date.now() }, extra || {}));
+      if (!quiet) { selectGame(id, true); watchPlayers(id); logAct("Created the game for " + fmtDate(date, true), id); }
+      if (!quiet && db.live && me.uid && !hasAdmins()) saveAdmins({ [me.uid]: me.name || me.email || "Admin" }, "You started this game, so you're the group's admin now.", "Became the admin by starting a game");
+    } catch (e) { console.error(e); if (!quiet) toast("That didn't save. Try again."); }
+    finally { state.creating = false; }
+    return id;
+  }
+  const payers = (L) => L.playing.concat(L.waitlist.filter((p) => p.owes), L.out.filter((p) => p.owes));
+  // A game is over once it is completed or its date has passed
+  const isOver = (g) => !!g && (!!g.completed || (!!g.date && g.date < todayISO()));
+  const hasBill = (g) => !!(g && g.bill && Number(g.bill.total) > 0);
+  // Where a game is: signup, locked, day (game day, or played with no bill yet), pay, done
+  function stageOf(g) {
+    if (!g) return "signup";
+    if (g.completed) return "done";
+    if (hasBill(g)) return "pay";
+    if (g.date && g.date <= todayISO()) return "day";
+    return g.locked ? "locked" : "signup";
+  }
+  // Once a game is over, only the captain/admin can change who played (so nobody moves up into a finished game)
+  const frozen = () => isOver(state.settings) && !isCaptain();
+  const isMine = (p) => mine.has(p.id) || (!p.guestOf && ((!!me.uid && p.uid === me.uid) || (!!me.name && same(p.name, me.name))));
+  function myRow() {
+    const rows = state.players.filter((p) => !p.guestOf && (mine.has(p.id) || (me.uid && p.uid === me.uid) || (me.name && same(p.name, me.name))));
+    return rows.find((p) => p.status !== "out") || rows[0] || null;
+  }
+  const myGuests = () => state.players.filter((p) => p.guestOf && me.name && same(p.guestOf, me.name) && p.status !== "out");
+
+  /* ---------- Navigation: Game, Players (List | Teams), Group. Old #list, #teams, #stats links still work ---------- */
+  const SCREENS = ["home", "players", "group"];
+  const ALIAS = { home: ["home"], players: ["players"], list: ["players", "list"], teams: ["players", "teams"], group: ["group"], stats: ["group"] };
+  function go(name, push) {
+    const a = ALIAS[name] || ["home"]; name = a[0];
+    if (a[1]) state.pview = a[1];
+    SCREENS.forEach((s) => { $("s-" + s).hidden = s !== name; });
+    document.querySelectorAll(".tab").forEach((t) => { if (t.dataset.go === name) t.setAttribute("aria-current", "page"); else t.removeAttribute("aria-current"); });
+    const hash = name === "players" ? (state.pview === "teams" ? "teams" : "players") : name;
+    if (push !== false && location.hash !== "#" + hash) history.replaceState(null, "", "#" + hash);
+    window.scrollTo(0, 0);
+    render();
+  }
+  document.addEventListener("click", (e) => { const g = e.target.closest("[data-go]"); if (g) go(g.dataset.go); });
+  $("pv-list").onclick = () => go("list");
+  $("pv-teams").onclick = () => go("teams");
+
+  /* ---------- Render ---------- */
+  function render() {
+    const s = state.settings || {}, L = lists(), capt = isCaptain();
+    // Top bar
+    fillAv($("me-av"), me.name, photoOf(myProf()));
+    $("me-name").textContent = me.name || "Your name";
+    $("me-chip").setAttribute("aria-label", me.name ? me.name + ": change name" : "Add your name");
+    const gi = groupInfo();
+    $("g-eyebrow").textContent = gi.name;
+    $("sw-group").textContent = gi.name;
+    $("sw-game").textContent = !state.gamesReady ? "Loading" : state.gid ? fmtDate(gameDate()) : "No game";
+    $("grp-title").textContent = gi.name;
+    if (document.title !== gi.name) document.title = gi.name;
+    if (state.gamesReady) setTimeout(() => shownIds().forEach(watchPlayers), 0);
+    renderDues();
+    // Hero
+    const noGame = state.gamesReady && !state.gid;
+    if (!state.ready) $("g-title").textContent = "Loading…";
+    else if (noGame) { $("g-title").textContent = "No game yet"; $("g-sub").textContent = ""; }
+    else { $("g-title").textContent = fmtDate(gameDate(), true); $("g-sub").textContent = [s.time, s.court].filter(Boolean).join(" · ") || (s.date ? "" : "Time and court to be confirmed"); }
+    const full = L.playing.length >= L.cap, locked = !!s.locked;
+    const st = $("g-state");
+    const gst = state.gid ? gameStatus(state.gid) : { key: "open" };
+    const past = gameDate() < todayISO();
+    st.className = "pill " + (gst.key === "done" ? "open" : past ? "full" : locked ? "locked" : full ? "full" : "open");
+    st.hidden = noGame;
+    st.textContent = gst.key === "done" ? "Completed ✓" : !past && gameDate() === todayISO() && !hasBill(s) ? "Game day" : past || hasBill(s) ? (gst.key === "due" ? "Collecting payment" : "Played · bill pending") : locked ? "🔒 Locked" : full ? "Full" : "Open";
+    // Stage strip: Sign-up, Locked, Game, Pay, Done
+    const stage = stageOf(state.settings), sIdx = ["signup", "locked", "day", "pay", "done"].indexOf(stage);
+    const stg = $("g-stg"); stg.hidden = noGame || !state.ready;
+    Array.from(stg.children).forEach((x, i) => { x.className = i < sIdx ? "pa" : i === sIdx ? "n" : ""; if (i === sIdx) x.setAttribute("aria-current", "step"); else x.removeAttribute("aria-current"); });
+    const meter = $("meter"); meter.textContent = "";
+    for (let i = 0; i < L.cap; i++) meter.appendChild(el("i", i < L.playing.length ? "on" : ""));
+    const left = L.cap - L.playing.length;
+    $("g-spots").innerHTML = "";
+    meter.hidden = noGame || !(stage === "signup" || stage === "locked");
+    let wl = "";
+    if (state.ready && !noGame) {
+      if (stage === "signup" || stage === "locked") {
+        if (left > 0) { const b = el("b", "num", String(left)); $("g-spots").append(b, " spot" + (left === 1 ? "" : "s") + " left"); }
+        else $("g-spots").textContent = "All " + L.cap + " spots taken";
+        wl = L.playing.length + " in" + (L.waitlist.length ? " · " + L.waitlist.length + " waiting" : "");
+      } else if (stage === "day") {
+        const nw = L.playing.filter((p) => p.team === "white").length, nb = L.playing.filter((p) => p.team === "black").length;
+        $("g-spots").textContent = nw && nb ? "White " + nw + " v Black " + nb : L.playing.length + " playing";
+      } else {
+        const bi = billInfo(L), oth = bi ? bi.P.filter((p) => !same(p.name, bi.by)) : [], pd = oth.filter((p) => p.paid).length;
+        $("g-spots").textContent = stage === "done" && pd === oth.length ? "All paid ✓" : pd + " of " + oth.length + " paid";
+        if (bi) wl = "Rs " + bi.share + " each";
+      }
+    }
+    $("g-wl").textContent = wl;
+    const tc = $("tab-count"); tc.hidden = !state.ready || !L.playing.length; tc.textContent = String(L.playing.length);
+
+    renderRsvp(L);
+    // Who's in: one row that opens the Players tab
+    $("home-in").hidden = noGame || !state.ready;
+    const faces = $("faces"); faces.textContent = "";
+    L.playing.slice(0, 6).forEach((p) => faces.appendChild(avatar("span", "av", p.name, profOf(p))));
+    $("home-in-t").textContent = L.playing.length ? L.playing.length + " in" + (L.waitlist.length ? " · " + L.waitlist.length + " waiting" : "") + " · see who" : "Nobody yet. Be the first.";
+    // Payment, collecting (payer and organisers) and the organiser to-do
+    renderPay(L);
+    renderCollect(L);
+    renderTodo(L);
+
+    // List screen
+    $("h-in").textContent = fmtDate(gameDate()) + " · " + L.playing.length + " of " + L.cap;
+    fill($("l-in"), L.playing, "playing", "Nobody has joined yet.");
+    fill($("l-wl"), L.waitlist, "waitlist", full ? "No one waiting." : "Spots are still open.");
+    $("sec-out").hidden = L.out.length === 0;
+    fill($("l-out"), L.out, "out", "");
+    const biL = billInfo(L);
+    $("copy-pend").hidden = !biL || !(capt || (me.name && same(me.name, biL.by)));
+    const teamsView = state.pview === "teams";
+    $("v-list").hidden = teamsView; $("v-teams").hidden = !teamsView;
+    $("pv-list").setAttribute("aria-pressed", String(!teamsView)); $("pv-teams").setAttribute("aria-pressed", String(teamsView));
+
+    renderTeams(L, capt);
+    renderPast();
+    renderOrgMenu();
+  }
+
+  /* ---------- Switcher: this group's open games, past games, new game, other groups ---------- */
+  // A game's state in words, for the switcher
+  function gameWords(id) {
+    const g = state.games[id] || {}, st = stageOf(g), ps = state.playersBy[id] || [], L = listsFor(g, ps), bi = billInfo(L, g);
+    const r = ps.find((p) => !p.guestOf && p.status !== "out" && (mine.has(p.id) || (me.uid && p.uid === me.uid) || (me.name && same(p.name, me.name))));
+    const you = r ? (L.playing.includes(r) ? "You're in" : "You're on the waitlist") : "";
+    if (st === "pay") { const left = bi.P.filter((p) => !p.paid && !same(p.name, bi.by)).length; return { t: left ? "Collecting payment" : "All paid", s: left ? left + " still to pay" : "Closing", due: left > 0 }; }
+    if (st === "day") return dateOf(id) === todayISO() ? { t: "Game day", s: L.playing.length + " playing" } : { t: "Played · bill pending", s: L.playing.length + " played", due: true };
+    const n = L.playing.length + " of " + L.cap;
+    if (st === "locked") return { t: "List locked", s: [you, n].filter(Boolean).join(" · ") };
+    return { t: L.playing.length >= L.cap ? "Sign-up full" : "Sign-up open", s: [you, n].filter(Boolean).join(" · ") };
+  }
+  function openSwitcher() {
+    const gi = groupInfo(), sh = sheetHead(gi.name), ids = activeIds();
+    if (!ids.length) sh.appendChild(el("div", "small muted", "No open games right now."));
+    ids.forEach((id) => {
+      const w = gameWords(id), [, m, d] = dateOf(id).split("-").map(Number);
+      const b = btn("gl" + (id === state.gid ? " on" : "") + (w.due ? " due" : ""), "", () => { selectGame(id, true); closeSheet(); window.scrollTo(0, 0); render(); });
+      b.dataset.gid = id; b.setAttribute("aria-label", fmtDate(dateOf(id), true) + ": " + w.t + ". " + w.s);
+      const dt = el("span", "dt", String(d)); dt.appendChild(el("small", "", MON[m - 1])); b.appendChild(dt);
+      const x = el("div", "x"); x.appendChild(el("b", "", w.t)); x.appendChild(el("span", "", w.s)); b.appendChild(x);
+      b.appendChild(el("span", "small muted", id === state.gid ? "Showing" : "›"));
+      sh.appendChild(b);
+    });
+    const row = el("div", "copyrow"), nDone = completedIds().length;
+    const pg = btn("btn", "Completed games" + (nDone ? " (" + nDone + ")" : ""), () => openCompleted()); pg.id = "done-games"; row.appendChild(pg);
+    if (canNewGame()) { const ng = btn("btn primary", "+ New game", () => openNewGame()); ng.id = "new-game"; row.appendChild(ng); }
+    sh.appendChild(row);
+    const others = allGroups().filter((g) => g.group !== GROUP);
+    sh.appendChild(el("div", "menu-h", others.length ? "Other groups" : "Groups"));
+    others.forEach((g) => {
+      const a = el("a", "gl"); a.href = groupHref(g.group);
+      const x = el("div", "x"); x.appendChild(el("b", "", g.name)); x.appendChild(el("span", "", DAYS[g.weekday] + "s" + (g.time ? " · " + g.time : ""))); a.appendChild(x);
+      a.appendChild(el("span", "small muted", "Open ›")); sh.appendChild(a);
+    });
+    const nb = btn("btn ghost sm", "+ Start a new group", () => openNewGroup()); nb.id = "new-group"; sh.appendChild(nb);
+    openSheet("switcher");
+  }
+  /* ---------- New game: filled in from the group's usual game ---------- */
+  function nextFreeDate() { const taken = new Set(Object.keys(state.games).map(dateOf)); let d = nextGameDay(); while (taken.has(d)) d = addDays(d, 7); return d; }
+  const lastGame = () => state.games[Object.keys(state.games).sort(byDate).pop()] || {};
+  function usualGame() { const gi = groupInfo(), last = lastGame(); return { date: nextFreeDate(), time: gi.time || last.time || "", court: gi.court || last.court || "", cap: Number(last.cap) || 14 }; }
+  function newGameText(o) {
+    const lines = ["🏀 *" + groupInfo().name + "*", [fmtDate(o.date), o.time, o.court].filter(Boolean).join(" · "), ""];
+    for (let i = 1; i <= o.cap; i++) lines.push(i + ".");
+    lines.push("", "Join or drop here 👉 " + link());
+    return lines.join("\n");
+  }
+  // Create the game and copy its WhatsApp message. The copy starts first, while the tap still counts.
+  async function quickCreate(o, b) {
+    if (state.games[gameIdFor(o.date)]) { toast("There's already a game on " + fmtDate(o.date) + "."); selectGame(gameIdFor(o.date), true); closeSheet(); render(); return; }
+    const text = newGameText(o), copying = copyText(text, null);
+    if (b) b.disabled = true;
+    const id = await createGame(o.date, false, { time: o.time, court: o.court, cap: o.cap });
+    const ok = await copying;
+    if (state.gid !== id) { if (b) b.disabled = false; return; }
+    closeSheet(); go("home");
+    toast("Game created for " + fmtDate(o.date, true) + (ok ? ". Message copied: paste it in the group." : "."));
+    if (!ok) { const fb = $("copy-fallback"); fb.value = text; fb.hidden = false; }
+  }
+  function openNewGame() {
+    if (!canNewGame()) { toast(hasAdmins() ? "Only an admin can start a game. " + captainOnly().replace(/^Admins only\. /, "") : "Only an organiser can start a game. Unlock organiser tools in the Group tab."); return; }
+    const u = usualGame(); let cap = u.cap;
+    const sh = sheetHead("New game");
+    const f = el("form"); f.autocomplete = "off";
+    const kv = (label, node) => { const r = el("label", "kv"); r.appendChild(el("span", "", label)); r.appendChild(node); f.appendChild(r); return node; };
+    const iDate = kv("Date", Object.assign(el("input"), { type: "date", value: u.date, min: todayISO() })); iDate.id = "ng-date";
+    const iTime = kv("Time", Object.assign(el("input"), { type: "text", value: u.time, placeholder: "9 pm", maxLength: 30 })); iTime.id = "ng-time";
+    const iCourt = kv("Court", Object.assign(el("input"), { type: "text", value: u.court, placeholder: "Court name", maxLength: 60 })); iCourt.id = "ng-court";
+    const stp = el("span", "stp"), out = el("output", "num", String(cap)); out.id = "ng-cap";
+    const minus = btn("", "−", () => { cap = Math.max(2, cap - 1); out.textContent = String(cap); }); minus.setAttribute("aria-label", "Fewer spots"); minus.id = "ng-minus";
+    const plus = btn("", "+", () => { cap = Math.min(30, cap + 1); out.textContent = String(cap); }); plus.setAttribute("aria-label", "More spots"); plus.id = "ng-plus";
+    stp.append(minus, out, plus);
+    const r1 = el("div", "kv"); r1.appendChild(el("span", "", "Spots")); r1.appendChild(stp); f.appendChild(r1);
+    const lockT = el("b", "small"), r2 = el("div", "kv"); r2.appendChild(el("span", "", "List locks")); r2.appendChild(lockT); f.appendChild(r2);
+    const updLock = () => { lockT.textContent = /^\d{4}-\d{2}-\d{2}$/.test(iDate.value) ? "When you tap Lock · try " + fmtDate(addDays(iDate.value, -1)) : "When you tap Lock"; };
+    iDate.addEventListener("input", updLock); iDate.addEventListener("change", updLock); updLock();
+    const sb = el("button", "btn primary big", "Create and copy message"); sb.type = "submit"; sb.style.marginTop = "14px"; sb.style.width = "100%"; f.appendChild(sb);
+    f.onsubmit = (ev) => {
+      ev.preventDefault();
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(iDate.value)) { toast("Pick a date."); return; }
+      quickCreate({ date: iDate.value, time: iTime.value.trim(), court: iCourt.value.trim(), cap }, sb);
+    };
+    sh.appendChild(f);
+    openSheet("newgame");
+  }
+  // Past games: closed once everyone has paid (or an organiser closed it)
+  function openCompleted() {
+    const sh = sheetHead("Completed games");
+    const ids = completedIds();
+    sh.appendChild(el("div", "small muted", ids.length ? "Games move here once everyone has paid. Tap one to see the bill, who paid and the teams." : "Games move here once everyone has paid."));
+    const ul = el("ul", "done-list");
+    ids.forEach((id) => {
+      const g = state.games[id], sum = g.summary || {}, pl = sum.playing || [];
+      const li = el("li"), b = btn("", "", () => { selectGame(id, true); closeSheet(); go("home"); });
+      const t = el("div"); t.appendChild(el("b", "", fmtDate(dateOf(id), true)));
+      t.appendChild(el("span", "small muted", [g.time, pl.length + " played", g.fee ? "Rs " + g.fee + " each" : ""].filter(Boolean).join(" · ")));
+      const b0 = g.bill || {}, sm = g.summary || {}, owers = (sm.playing || []).concat((sm.waitlist || []).filter((x) => x.owes), (sm.dropped || []).filter((x) => x.owes));
+      const left = b0.by ? owers.filter((x) => !x.paid && !same(x.name, b0.by)).length : 0;
+      const money = [Number(b0.total) > 0 ? "Rs " + Number(b0.total).toLocaleString("en-IN") + " court" : "", b0.by ? "paid by " + b0.by : "", Number(b0.total) > 0 ? (left ? left + " not paid" : "all paid ✓") : ""].filter(Boolean).join(" · ");
+      if (money) t.appendChild(el("span", "small muted cg-money", money));
+      b.appendChild(t); b.appendChild(el("span", "small", (g.winner === "white" ? "⚪ won" : g.winner === "black" ? "⚫ won" : g.winner === "draw" ? "Draw" : "") + " ›"));
+      li.appendChild(b); ul.appendChild(li);
+    });
+    sh.appendChild(ul);
+    openSheet("completed");
+  }
+  // What this phone's person still owes on other games, including closed games with unpaid shares. Never blocks joining.
+  function owesIn(g) {
+    const sm = g && g.summary; if (!sm || !me.name || !hasBill(g)) return false;
+    const by = g.bill.by;
+    return (sm.playing || []).some((p) => !p.paid && !same(p.name, by) && (same(p.name, me.name) || same(p.guestOf, me.name))) ||
+      (sm.waitlist || []).concat(sm.dropped || []).some((p) => p.owes && !p.paid && same(p.name, me.name));
+  }
+  function myShares(id) {
+    const g = state.games[id], L = listsFor(g, state.playersBy[id] || []), bi = billInfo(L, g);
+    if (!bi || !me.name || same(me.name, bi.by)) return { bi, mineP: [], owed: [] };
+    const mineP = bi.P.filter((p) => !same(p.name, bi.by) && (mine.has(p.id) || (!p.guestOf && (same(p.name, me.name) || (me.uid && p.uid === me.uid))) || (p.guestOf && same(p.guestOf, me.name))));
+    return { bi, mineP, owed: mineP.filter((p) => !p.paid) };
+  }
+  function myDues() {
+    if (!me.name) return [];
+    const ids = Object.keys(state.games).filter((id) => !state.games[id].completed || (state.playersBy[id] && owesIn(state.games[id])));
+    return ids.map((id) => Object.assign({ id }, myShares(id))).filter((d) => d.owed.length).sort((a, b) => byDate(a.id, b.id));
+  }
+  function renderDues() {
+    const box = $("dues"); box.textContent = "";
+    const list = myDues().filter((d) => d.id !== state.gid);
+    box.hidden = !list.length;
+    list.forEach((d) => {
+      const r = el("div", "duestrip");
+      r.appendChild(el("span", "", "Rs " + (d.owed.length * d.bi.share) + " due for " + fmtDate(dateOf(d.id))));
+      r.appendChild(btn("btn sm primary", "Pay", () => openPaySheet(d.id)));
+      box.appendChild(r);
+    });
+  }
+  // Pay an old game in a sheet over the current one. You stay on the game you were looking at.
+  function openPaySheet(id) {
+    const { bi, owed } = myShares(id), when = fmtDate(dateOf(id));
+    if (!bi) return;
+    const due = owed.length * bi.share;
+    const sh = sheetHead(owed.length ? "Pay " + (bi.by || "") + " Rs " + due : "Paid for " + when);
+    const why = owed.some((p) => p.status === "out") ? " · you dropped after the lock" : owed.some((p) => p.guestOf) ? " · includes your guest" : "";
+    sh.appendChild(el("div", "small muted", when + why + " · court Rs " + bi.total.toLocaleString("en-IN") + " split " + bi.split + " ways"));
+    if (owed.length) {
+      if (bi.upi) { const a = el("a", "btn primary", "Pay Rs " + due + " in UPI app"); a.href = upiLink(bi, due, dateOf(id)); sh.appendChild(a); }
+      const ok = btn("btn good", "I've paid for " + when, null);
+      ok.onclick = async () => { ok.disabled = true; if (await setPaid(owed, true, "Marked as paid for " + when + ". Thanks!", id)) closeSheet(); else ok.disabled = false; };
+      sh.appendChild(ok);
+    } else sh.appendChild(el("div", "done-note", "Nothing left to pay for " + when + " ✓"));
+    if (bi.upi) { const line = el("div", "upi-line"); line.appendChild(el("code", "", bi.upi)); line.appendChild(btn("btn sm", "Copy", () => copyText(bi.upi, "UPI ID copied. Paste it in your payment app."))); sh.appendChild(line); }
+    openSheet("pay");
+  }
+  /* ---------- Next-step card: one card that follows the game's stage ---------- */
+  const ord = (n) => { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
+  const canNewGame = () => !((pinHash() || hasAdmins()) && !isCaptain());
+  const quiet = (text, fn, danger) => btn("btn quiet" + (danger ? " danger" : ""), text, fn);
+  // The next upcoming game after this one, with a one-tap join that names its date
+  function nextGameBlock(box) {
+    const t = todayISO(), nx = activeIds().find((id) => id !== state.gid && dateOf(id) >= t && dateOf(id) > dateOf(state.gid));
+    const c = el("div", "next-game");
+    if (!nx) {
+      if (isCaptain()) return; // the organiser's to-do card offers "Start <date>"
+      if (canNewGame()) { c.appendChild(el("div", "small muted", "Next game")); c.appendChild(btn("btn primary", "+ New game", () => openNewGame())); }
+      else c.appendChild(el("div", "small muted", "The next game shows up here once the organiser posts it."));
+      box.appendChild(c); return;
+    }
+    const g = state.games[nx], ps = state.playersBy[nx] || [], Ln = listsFor(g, ps), left = Ln.cap - Ln.playing.length, when = fmtDate(dateOf(nx));
+    const there = ps.find((p) => !p.guestOf && p.status !== "out" && (mine.has(p.id) || (me.uid && p.uid === me.uid) || (me.name && same(p.name, me.name))));
+    c.appendChild(el("div", "small muted", "Next game"));
+    c.appendChild(el("b", "", when + " · " + (left > 0 ? left + " spot" + (left === 1 ? "" : "s") + " left" : "full")));
+    if (there || !me.name) c.appendChild(btn("btn", "Go to " + when, () => { selectGame(nx, true); render(); }));
+    else c.appendChild(btn("btn primary", (left > 0 && !g.locked ? "I'm in for " : "Join waitlist for ") + when, () => { selectGame(nx, true); render(); join(me.name, false); }));
+    box.appendChild(c);
+  }
+  function renderRsvp(L) {
+    const box = $("rsvp");
+    const keep = {}; ["r-name", "r-guest"].forEach((k) => { const x = $(k); if (x) keep[k] = { v: x.value, f: document.activeElement === x }; });
+    box.textContent = ""; box.className = "rsvp"; box.hidden = false;
+    setTimeout(() => Object.keys(keep).forEach((k) => { const x = $(k); if (x && keep[k].v && !x.value) { x.value = keep[k].v; if (keep[k].f) x.focus(); } }), 0);
+    if (!state.ready) { box.appendChild(el("div", "muted", "Loading the list…")); return; }
+    if (!state.gid) {
+      box.appendChild(el("h3", "", "No upcoming game"));
+      if (canNewGame()) { box.appendChild(el("div", "small muted", "Start the next game and share the link in the group.")); box.appendChild(btn("btn primary big", "+ New game", () => openNewGame())); }
+      else box.appendChild(el("div", "small muted", "The next game shows up here once the organiser posts it."));
+      return;
+    }
+    const row = myRow(), s = state.settings || {}, stage = stageOf(s), when = fmtDate(gameDate());
+    const lockedNow = !!s.locked, full = lockedNow || L.playing.length >= L.cap;
+    const pos = row && row.status !== "out" ? (L.playing.indexOf(row) >= 0 ? { kind: "in", n: L.playing.indexOf(row) + 1 } : { kind: "wl", n: L.waitlist.indexOf(row) + 1 }) : null;
+    const wlNext = L.waitlist.length + 1;
+
+    // After the game: what you owe (the pay card), that you're settled, or that you didn't play. Then the next game.
+    if (isOver(s) || stage === "done" || (stage === "pay" && gameDate() <= todayISO())) {
+      const { bi, mineP, owed } = myShares(state.gid);
+      const played = !!(pos && pos.kind === "in");
+      if (owed.length) { box.hidden = true; return; } // the pay card below is the next step
+      if (!me.name) { box.appendChild(el("h3", "", "This game is over")); box.appendChild(el("div", "small muted", "Sign up for the next game instead.")); }
+      else if (bi && same(me.name, bi.by)) {
+        box.classList.add("good");
+        box.appendChild(el("h3", "", "You paid the court for " + when));
+        box.appendChild(el("div", "small", "The others pay you Rs " + bi.share + " each."));
+      } else if (bi && mineP.length) {
+        box.classList.add("good");
+        box.appendChild(el("h3", "", "You're settled for " + when + " ✓"));
+        if (s.winner) box.appendChild(el("div", "small", s.winner === "draw" ? "It was a draw." : teamWord(s.winner) + " won."));
+      } else if (played) {
+        box.appendChild(el("h3", "", "You played on " + when));
+        box.appendChild(el("div", "small muted", bi ? "Nothing left for you to pay." : "The bill isn't in yet. Your share shows here once whoever paid the court adds it."));
+        box.appendChild(el("div", "tiny muted", "The list can't change now. Ask an admin if something's wrong."));
+      } else if (row) {
+        box.appendChild(el("h3", "", "You didn't play on " + when));
+        box.appendChild(el("div", "small muted", (pos && pos.kind === "wl" ? "You were " + ord(pos.n) + " on the waitlist. " : "You dropped out in time. ") + "Nothing to pay."));
+      } else {
+        box.appendChild(el("h3", "", "This game is over"));
+        box.appendChild(el("div", "small muted", "You weren't on this game's list. Sign up for the next game instead."));
+      }
+      nextGameBlock(box);
+      return;
+    }
+
+    if (!me.name) {
+      box.appendChild(el("h3", "", full ? "The game is full" : "Are you playing?"));
+      box.appendChild(el("div", "small muted", full ? "Add your name and join the waitlist. You move up by yourself if someone drops." : "Add your name once. This phone remembers it."));
+      const inp = el("input"); inp.type = "text"; inp.id = "r-name"; inp.placeholder = "Your name"; inp.maxLength = 40; inp.autocomplete = "name"; inp.setAttribute("aria-label", "Your name"); inp.enterKeyHint = "go";
+      box.appendChild(inp);
+      box.appendChild(btn("btn primary big", full ? "Join waitlist as #" + wlNext : "I'm in for " + when, () => joinWithName(false), state.joining));
+      const mb = quiet("Not sure yet? Mark as maybe", () => joinWithName(true)); mb.classList.add("center"); mb.disabled = state.joining; box.appendChild(mb);
+      inp.addEventListener("keydown", (e) => { if (e.key === "Enter") joinWithName(false); });
+      if (db.auth) { const gl = btn("link", "Or sign in with Google", () => signInGoogle()); gl.style.alignSelf = "center"; box.appendChild(gl); }
+      return;
+    }
+
+    const links = el("div", "links");
+    if (!pos) {
+      const dropped = row && row.status === "out";
+      box.appendChild(el("h3", "", full ? (lockedNow ? "The list is locked" : "The game is full") : dropped ? "You dropped out, " + me.name : "Hey " + me.name + ", you in?"));
+      if (dropped && row.owes) box.appendChild(el("div", "small", "You dropped out late, so your share is still due."));
+      else box.appendChild(el("div", "small muted", full ? "Join the waitlist. If someone drops, you move up by yourself and it shows here." : (L.cap - L.playing.length) + " spots left for " + when + "."));
+      const label = dropped ? (full ? "Rejoin the waitlist as #" + wlNext : "Rejoin for " + when) : full ? "Join waitlist as #" + wlNext : "I'm in for " + when;
+      box.appendChild(btn("btn primary big", label, () => join(me.name, false), state.joining));
+      const mb = quiet("Not sure yet? Mark as maybe", () => join(me.name, true)); mb.disabled = state.joining; links.appendChild(mb);
+    } else if (pos.kind === "in") {
+      box.classList.add("in");
+      const team = stage === "day" && (row.team === "white" || row.team === "black") ? row.team : null;
+      const st = el("div", "status");
+      st.appendChild(el("div", "badge-big num", "#" + pos.n));
+      const txt = el("div");
+      txt.appendChild(el("h3", "", team ? "You're on " + teamWord(team) : row.tentative ? "You're a maybe" : stage === "signup" ? "You're in!" : "You're playing"));
+      txt.appendChild(el("div", "small muted", stage === "locked" ? "The list is locked. Teams go up before the game." : stage === "day" ? (team ? "Tonight · " + when : "Spot " + pos.n + " of " + L.cap + " · teams aren't set yet") : "Spot " + pos.n + " of " + L.cap + " · " + when));
+      st.appendChild(txt); box.appendChild(st);
+      if (team) {
+        const grid = el("div", "teams2");
+        ["white", "black"].forEach((side) => {
+          const col = el("div", "tm2" + (side === "black" ? " b" : ""));
+          const ps = L.playing.filter((p) => p.team === side);
+          const h = el("h4"); h.append(teamWord(side), el("span", "", String(ps.length))); col.appendChild(h);
+          ps.forEach((p) => col.appendChild(el("span", p.id === row.id ? "me" : "", p.name + (p.id === row.id ? " (you)" : ""))));
+          grid.appendChild(col);
+        });
+        box.appendChild(grid);
+      }
+      if (row.tentative) box.appendChild(btn("btn good", "Confirm I'm playing", () => write(row.id, { tentative: false }, "Confirmed. See you there!", row.name + " confirmed playing"), state.busy.has(row.id)));
+      if (stage === "signup" && !frozen()) links.appendChild(btn("link", "+ Bring a guest", () => { state.guestOpen = true; render(); }));
+      if (!frozen()) {
+        const owesIfDrop = lockedNow || stage === "day";
+        const d = quiet(owesIfDrop ? "Can't make it? Your share is still due" : "Can't make it?", null, true); d.disabled = state.busy.has(row.id);
+        const lbl = d.textContent;
+        d.onclick = () => { if (confirmTap(d, lbl, "Tap again to confirm")) dropOut(row); };
+        links.appendChild(d);
+      } else txt.appendChild(el("div", "tiny muted", "This game is over, so the list can't change now. Ask an admin if something's wrong."));
+    } else {
+      box.classList.add("wl");
+      const st = el("div", "status");
+      st.appendChild(el("div", "badge-big num", "W" + pos.n));
+      const txt = el("div");
+      txt.appendChild(el("h3", "", "You're " + ord(pos.n) + " in line"));
+      txt.appendChild(el("div", "small muted", (pos.n > 1 ? (pos.n - 1) + " ahead of you. " : "You're next. ") + "You move up if someone drops."));
+      st.appendChild(txt); box.appendChild(st);
+      if (!frozen()) {
+        const d = quiet("Leave the waitlist", null, true); d.disabled = state.busy.has(row.id);
+        d.onclick = () => { if (confirmTap(d, "Leave the waitlist", "Tap again to confirm")) dropOut(row); };
+        links.appendChild(d);
+      }
+    }
+
+    // Guests (+1)
+    const guests = myGuests();
+    if (guests.length) {
+      const g = el("div", "guests");
+      guests.forEach((p) => {
+        const t = el("span", "tag g", p.name + " (your guest)");
+        if (!frozen()) {
+          const x = btn("link", "remove", null); x.style.padding = "0 0 0 4px"; x.style.fontSize = "12px";
+          x.onclick = () => { if (confirmTap(x, "remove", "sure?")) dropOut(p); };
+          t.appendChild(x);
+        }
+        g.appendChild(t);
+      });
+      box.appendChild(g);
+    }
+    if (state.guestOpen) {
+      const r = el("div", "guest-row");
+      const gi = el("input"); gi.type = "text"; gi.placeholder = "Guest's name"; gi.maxLength = 40; gi.id = "r-guest"; gi.setAttribute("aria-label", "Guest's name");
+      r.appendChild(gi);
+      r.appendChild(btn("btn primary", "Add", () => addGuest()));
+      box.appendChild(r);
+      gi.addEventListener("keydown", (e) => { if (e.key === "Enter") addGuest(); });
+      setTimeout(() => gi.focus(), 0);
+    }
+    box.appendChild(links);
+    if (pos && pos.kind === "in" && stage === "signup") box.appendChild(el("div", "next-hint", "Next: teams go up after the list locks."));
+  }
+  function joinWithName(tentative) {
+    const v = ($("r-name").value || "").trim().replace(/\s+/g, " ");
+    if (!v) { toast("Type your name first."); $("r-name").focus(); return; }
+    setMe(v); join(v, tentative);
+  }
+  function setMe(name) { me = Object.assign({}, me, { name }); ls.set("smackdown-profile", me); if (me.uid && name) db.doc(PROFILES + "/" + me.uid).merge({ name, at: Date.now() }).catch(() => {}); }
+  function addGuest() {
+    const v = ($("r-guest").value || "").trim().replace(/\s+/g, " ");
+    if (!v) { toast("Type your guest's name."); return; }
+    state.guestOpen = false;
+    join(v, false, me.name);
+  }
+
+  const nameId = (n) => { const k = String(n).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); return k ? "n-" + k.slice(0, 40) : null; };
+  // Tell the person their spot from a fresh server read, so a rush of joins can't make it wrong
+  async function announceSpot(an) {
+    let rows;
+    // wait a moment so joins sent at the same instant have all landed
+    if (db.live) await new Promise((r) => setTimeout(r, 1200));
+    try { rows = await db.collection("games/" + an.gid + "/players").fetch(); } catch (e) { toast(an.guestOf ? an.name + " added as your guest" : "You're on the list"); return; }
+    const L = listsFor(state.games[an.gid], rows);
+    const i = L.playing.findIndex((p) => p.id === an.pid), w = L.waitlist.findIndex((p) => p.id === an.pid);
+    if (an.guestOf) toast(an.name + " added as your guest" + (w >= 0 ? " (waitlist)" : ""));
+    else toast(i >= 0 ? "You're in! Spot " + (i + 1) : w >= 0 ? "You're on the waitlist, #" + (w + 1) : "You're on the list");
+  }
+  async function join(name, tentative, guestOf) {
+    if (!state.gid) { toast("Still loading. Try again in a moment."); return; }
+    if (state.joining) return;
+    const dup = state.players.find((p) => p.status !== "out" && same(p.name, name));
+    if (dup) {
+      if (!guestOf && !mine.has(dup.id)) { mine.add(dup.id); saveMine(); render(); toast("You're already on the list."); return; }
+      toast(name + " is already on the list. Add an initial if it's someone else."); return;
+    }
+    const old = state.players.find((p) => p.status === "out" && same(p.name, name));
+    if (isOver(state.settings) && !isCaptain()) { toast("This game is over. Join the next one."); return; }
+    const body = { name, tentative: !!tentative, guestOf: guestOf || null, status: "in", joinedAt: db.now(), late: !!(state.settings && state.settings.locked), paid: false, claimed: false, owes: !!(old && old.owes), droppedAt: null, team: null, uid: me.uid || null, owner: authUid() };
+    if (old && !canEdit(old)) { toast(notYours(old)); return; }
+    state.joining = true; render();
+    const gid = state.gid;
+    try {
+      let id;
+      if (old) { id = old.id; await db.doc(PLAYERS + "/" + id).set(Object.assign({}, body, { paid: !!old.paid, owner: old.owner && !isCaptain() ? authUid() : (old.owner || authUid()) })); }
+      else {
+        // New row: never overwrite one that's already there ("Rahul K" and "Rahul K." share an id, so the second gets "-2")
+        const base = nameId(name) || Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        const taken = new Set(state.players.map((p) => p.id));
+        for (let i = 1; ; i++) {
+          const tryId = i === 1 ? base : base + "-" + i;
+          if (taken.has(tryId) && i < 20) continue;
+          try { await db.doc(PLAYERS + "/" + tryId).create(body); id = tryId; break; }
+          catch (e) {
+            if (!(e && e.code === "exists") || i >= 20) throw e;
+            // Same name saved a moment ago from another phone: that's this person, already on the list
+            const there = await db.doc(PLAYERS + "/" + tryId).get().catch(() => null);
+            if (there && there.status !== "out" && same(there.name, name) && !guestOf) { mine.add(tryId); saveMine(); state.joining = false; render(); toast("You're already on the list."); return; }
+          }
+        }
+      }
+      mine.add(id); saveMine();
+      logAct(guestOf ? guestOf + " added " + name + " as a guest" : name + (old ? " rejoined" : " joined") + (tentative ? " as a maybe" : ""), gid);
+      announceSpot({ gid, pid: id, name, guestOf: guestOf || null });
+    } catch (e) { console.error(e); toast("That didn't save. Check your connection and try again."); }
+    state.joining = false;
+    render();
+  }
+  function dropOut(p) {
+    if (frozen()) { toast("This game is over, so the list can't change now. Ask an admin."); return; }
+    const L = lists();
+    const wasPlaying = L.playing.some((x) => x.id === p.id);
+    const owes = !!p.owes || (wasPlaying && (!!(state.settings && state.settings.locked) || isOver(state.settings) || hasBill(state.settings)));
+    const next = wasPlaying && L.waitlist[0];
+    let msg = p.name + " dropped out.";
+    if (next) msg += " " + next.name + " moves up.";
+    if (owes) msg += " The share is still due.";
+    write(p.id, { status: "out", droppedAt: Date.now(), owes, team: null }, msg);
+  }
+  // Save one line to the activity log. Never blocks or fails the change itself.
+  function logAct(text, gid) {
+    try {
+      gid = gid === undefined ? state.gid : gid;
+      const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      const entry = { name: String(me.name || "Someone").slice(0, 40), uid: me.uid || null, text: String(text || "").slice(0, 300), game: gid ? dateOf(gid) : null, gid: gid || null, captain: isCaptain(), at: db.now(), t: Date.now() };
+      db.doc(ACTIVITY + "/" + id).set(entry).catch(() => {});
+    } catch (e) { console.error(e); }
+  }
+  async function write(id, patch, msg, logText) {
+    if (state.busy.has(id) || !PLAYERS) return;
+    const row = state.players.find((x) => x.id === id);
+    if (row && !canEdit(row)) { toast(notYours(row)); return; }
+    state.busy.add(id); render();
+    try { await db.doc(PLAYERS + "/" + id).update(patch); if (msg) toast(msg); logAct(logText || msg); }
+    catch (e) { console.error(e); toast("That didn't save. Check your connection and try again."); }
+    finally { state.busy.delete(id); render(); }
+  }
+
+  /* ---------- List rows: names and plain tags. Organisers get one ⋯ menu per row ---------- */
+  function fill(ol, arr, kind, emptyText) {
+    ol.textContent = "";
+    if (!arr.length) { if (emptyText) ol.appendChild(el("li", "empty", emptyText)); return; }
+    const capt = isCaptain(), bi = billInfo();
+    arr.forEach((p, i) => {
+      const mineRow = isMine(p);
+      const li = el("li", mineRow ? "me" : "");
+      li.appendChild(el("span", "jn num", kind === "out" ? "–" : kind === "waitlist" ? "W" + (i + 1) : String(i + 1)));
+      const who = el("div", "who");
+      const pav = avatar("button", "pav", p.name, profOf(p)); pav.type = "button"; pav.setAttribute("aria-label", "Profile of " + p.name); pav.onclick = () => openPlayerCard(p);
+      who.appendChild(pav);
+      who.appendChild(el("b", "", p.name));
+      if (mineRow) who.appendChild(el("span", "tag you", "you"));
+      if (p.tentative && kind !== "out") who.appendChild(el("span", "tag t", "maybe"));
+      if (p.guestOf) who.appendChild(el("span", "tag g", p.guestOf + "'s guest"));
+      if (kind === "out" && p.owes) who.appendChild(el("span", "tag pend", "dropped late"));
+      else if (kind === "waitlist" && p.owes) who.appendChild(el("span", "tag pend", "share still due"));
+      const pays = bi && (kind === "playing" || p.owes);
+      if (pays && same(p.name, bi.by)) who.appendChild(el("span", "tag paid", "paid court"));
+      else if (pays && p.paid) who.appendChild(el("span", "tag paid", "paid"));
+      else if (pays) who.appendChild(el("span", "tag pend", "to pay"));
+      li.appendChild(who);
+      const acts = el("div", "acts");
+      if (capt) { const m = btn("more", "⋯", () => openRowMenu(p, kind), state.busy.has(p.id)); m.setAttribute("aria-label", "Actions for " + p.name); acts.appendChild(m); }
+      li.appendChild(acts);
+      ol.appendChild(li);
+    });
+  }
+  // Organiser actions for one person: paid, drop, rejoin, waive or charge a share
+  function openRowMenu(p, kind) {
+    if (!isCaptain()) { toast(captainOnly()); return; }
+    const bi = billInfo(), sh = sheetHead(p.name);
+    sh.appendChild(el("div", "small muted", (kind === "playing" ? "Playing" : kind === "waitlist" ? "On the waitlist" : "Dropped out") + (p.guestOf ? " · " + p.guestOf + "'s guest" : "") + (p.owes ? " · owes a share" : "")));
+    const act = (label, fn, cls) => { const b = btn("btn" + (cls ? " " + cls : ""), label, null); b.onclick = () => fn(b); sh.appendChild(b); return b; };
+    const pays = bi && (kind === "playing" || p.owes);
+    if (pays && !same(p.name, bi.by)) act(p.paid ? "Mark as not paid" : "Mark as paid", () => { closeSheet(); write(p.id, { paid: !p.paid }, p.paid ? p.name + " back to pending" : p.name + " marked paid"); }, p.paid ? "" : "good");
+    if (kind !== "playing" && (p.owes || (kind === "out" && bi))) act(p.owes ? "Waive share" : "Charge share", () => { closeSheet(); write(p.id, p.owes ? { owes: false, paid: false } : { owes: true }, p.owes ? p.name + " no longer owes a share" : p.name + " now owes a share"); });
+    if (kind === "out") act("Rejoin (at the end)", () => { closeSheet(); write(p.id, { status: "in", joinedAt: db.now(), late: !!(state.settings && state.settings.locked), droppedAt: null }, p.name + " is back (at the end)"); });
+    else { const lbl = kind === "waitlist" ? "Take off the waitlist" : "Drop " + p.name; act(lbl, (b) => { if (!confirmTap(b, lbl, "Tap again to confirm")) return; closeSheet(); dropOut(p); }, "danger"); }
+    act("See profile", () => openPlayerCard(p), "ghost");
+    openSheet("row");
+  }
+
+  /* ---------- Teams: tap a name to move it to the other side ---------- */
+  // Organisers edit the live teams. Everyone else gets a private sketch to play with.
+  const teamWord = (t) => (t === "white" ? "White" : t === "black" ? "Black" : "Not picked");
+  function teamOf(p) {
+    if (!isCaptain() && Object.prototype.hasOwnProperty.call(sketch, p.id)) return sketch[p.id];
+    return p.team === "white" || p.team === "black" ? p.team : null;
+  }
+  const sketching = () => !isCaptain() && Object.keys(sketch).length > 0;
+  async function assign(pairs, msg) {
+    pairs = pairs.filter(([id, t]) => { const p = state.players.find((x) => x.id === id); return p && teamOf(p) !== t; });
+    if (!pairs.length) return;
+    if (!isCaptain()) {
+      pairs.forEach(([id, t]) => { sketch[id] = t; });
+      ls.set("smackdown-sketch", sketch); render(); if (msg) toast(msg); return;
+    }
+    if (!PLAYERS) return;
+    try { const b = db.batch(); pairs.forEach(([id, t]) => b.update(PLAYERS + "/" + id, { team: t })); await b.commit(); if (msg) toast(msg); logAct("Teams: " + (msg || "changed")); }
+    catch (e) { console.error(e); toast("That didn't save. Try again."); }
+  }
+  function moveTeam(p) {
+    const L = lists(), cur = teamOf(p);
+    let to = cur === "white" ? "black" : cur === "black" ? "white" : null;
+    if (!to) { const w = L.playing.filter((x) => teamOf(x) === "white").length, b = L.playing.filter((x) => teamOf(x) === "black").length; to = w <= b ? "white" : "black"; }
+    assign([[p.id, to]], p.name + " → " + teamWord(to));
+  }
+  function teamBtn(p, side) {
+    const b = btn(isMine(p) ? "me" : "", "", () => moveTeam(p));
+    b.dataset.pid = p.id;
+    b.appendChild(el("span", "nm", p.name + (p.tentative ? " (maybe)" : "")));
+    b.appendChild(el("span", "mv", side === "white" ? "→" : side === "black" ? "←" : "+"));
+    b.setAttribute("aria-label", p.name + ", " + teamWord(side) + ". Tap to move to " + (side === "white" ? "Black" : side === "black" ? "White" : "a team"));
+    return b;
+  }
+  function renderTeams(L, capt) {
+    const white = L.playing.filter((p) => teamOf(p) === "white"), black = L.playing.filter((p) => teamOf(p) === "black");
+    const rest = L.playing.filter((p) => !teamOf(p));
+    $("n-white").textContent = String(white.length); $("n-black").textContent = String(black.length); $("n-bench").textContent = String(rest.length);
+    const diff = Math.abs(white.length - black.length), total = white.length + black.length;
+    $("bal-n").textContent = white.length + " v " + black.length;
+    const bal = $("bal");
+    bal.textContent = total === 0 ? "No teams yet" : diff === 0 ? "Even ✓" : "Off by " + diff;
+    bal.className = total === 0 ? "" : diff <= 1 ? "ok" : "off";
+    const mode = $("mode"); mode.textContent = "";
+    if (capt) { mode.className = "mode live"; mode.appendChild(el("span", "", "Organiser: changes are live for everyone.")); }
+    else {
+      mode.className = "mode sketch";
+      mode.appendChild(el("span", "", sketching() ? "Your sketch. Only you see it." : "Play around freely. Only the organiser's teams are shared."));
+      if (sketching()) mode.appendChild(btn("link", "Back to the real teams", () => { sketch = {}; ls.set("smackdown-sketch", sketch); render(); }));
+    }
+    [["t-white", white, "white"], ["t-black", black, "black"]].forEach(([id, arr, side]) => {
+      const box = $(id); box.textContent = "";
+      arr.forEach((p) => box.appendChild(teamBtn(p, side)));
+      if (!arr.length) box.appendChild(el("div", "empty", L.playing.length ? "Nobody yet" : "No players yet"));
+    });
+    const bench = $("t-bench"); bench.textContent = "";
+    rest.forEach((p) => bench.appendChild(teamBtn(p, null)));
+    $("z-bench").hidden = rest.length === 0;
+    $("t-clear").hidden = total === 0;
+    $("t-shuffle").disabled = L.playing.length < 2;
+  }
+  function shuffled(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function shuffleTeams() {
+    const arr = shuffled(lists().playing);
+    assign(arr.map((p, i) => [p.id, i % 2 ? "black" : "white"]), "Shuffled: " + Math.ceil(arr.length / 2) + " v " + Math.floor(arr.length / 2));
+  }
+  $("t-shuffle").onclick = shuffleTeams;
+  $("t-clear").onclick = (e) => {
+    if (!confirmTap(e.currentTarget, "Clear teams", "Tap again to clear")) return;
+    assign(lists().playing.filter((p) => teamOf(p)).map((p) => [p.id, null]), "Teams cleared");
+  };
+
+  /* ---------- WhatsApp text ---------- */
+  const link = () => location.origin + location.pathname + (MAIN ? "" : "?g=" + GROUP);
+  function listText() {
+    const s = state.settings || {}, L = lists(), lines = [];
+    const bi = billInfo(L);
+    lines.push("🏀 *" + groupInfo().name + "*", [fmtDate(gameDate()), s.time, s.court].filter(Boolean).join(" · ") + (s.locked ? " 🔒" : ""));
+    if (bi) lines.push("💸 Rs " + bi.share + " each to " + bi.upi + (bi.by ? " (" + bi.by + ")" : ""));
+    lines.push("");
+    L.playing.forEach((p, i) => lines.push((i + 1) + ". " + p.name + (p.guestOf ? " (" + p.guestOf + "'s guest)" : "") + (p.tentative ? " (T)" : "") + (p.paid ? " ✅" : "")));
+    for (let i = L.playing.length; i < L.cap; i++) lines.push((i + 1) + ".");
+    if (L.waitlist.length) { lines.push("", "WL"); L.waitlist.forEach((p, i) => lines.push((i + 1) + ". " + p.name + (p.tentative ? " (T)" : ""))); }
+    lines.push("", "Join or drop here 👉 " + link());
+    return lines.join("\n");
+  }
+  function teamsText() {
+    const s = state.settings || {}, L = lists();
+    const tw = L.playing.filter((p) => teamOf(p) === "white").map((p) => p.name), tb = L.playing.filter((p) => teamOf(p) === "black").map((p) => p.name);
+    const rest = L.playing.filter((p) => !teamOf(p)).map((p) => p.name);
+    const lines = ["*Teams* " + [fmtDate(gameDate()), s.time].filter(Boolean).join(" · ") + (sketching() ? " (my idea)" : ""), ""];
+    lines.push("⚪ *White* (" + tw.length + ")"); tw.forEach((n, i) => lines.push((i + 1) + ". " + n));
+    lines.push("", "⚫ *Black* (" + tb.length + ")"); tb.forEach((n, i) => lines.push((i + 1) + ". " + n));
+    if (rest.length) lines.push("", "Not picked yet: " + rest.join(", "));
+    if (s.winner && !sketching()) lines.push("", s.winner === "draw" ? "Result: Draw 🤝" : "🏆 Winner: " + teamWord(s.winner));
+    return lines.join("\n");
+  }
+  function pendText() {
+    const L = lists(), bi = billInfo(L);
+    if (!bi) return "The court bill isn't in yet for " + fmtDate(gameDate()) + ". Whoever paid: add it here 👉 " + link();
+    const pend = bi.P.filter((p) => !p.paid && !same(p.name, bi.by));
+    if (!pend.length) return "✅ Everyone has paid for " + fmtDate(gameDate()) + ". Thanks!";
+    const lines = ["💸 *Pending payment* " + fmtDate(gameDate()), "Court Rs " + bi.total + " ÷ " + bi.split + " = *Rs " + bi.share + " each*", "Pay " + (bi.by || "") + " on UPI: " + bi.upi, ""];
+    pend.forEach((p, i) => lines.push((i + 1) + ". " + p.name));
+    lines.push("", "Pay and tap I've paid here 👉 " + link());
+    return lines.join("\n");
+  }
+  async function copyText(text, okMsg) { try { await navigator.clipboard.writeText(text); if (okMsg) toast(okMsg); return true; } catch (e) { return false; } }
+  async function copyOut(text, msg) {
+    const fb = $("copy-fallback");
+    if (await copyText(text, msg)) { fb.hidden = true; return; }
+    fb.value = text; fb.hidden = false; fb.focus(); fb.select(); toast("Copy the text in the box.");
+  }
+  $("copy-list").onclick = () => copyOut(listText(), "List copied. Paste it in the group.");
+  $("copy-pend").onclick = () => copyOut(pendText(), "Reminder copied. Paste it in the group.");
+  $("copy-teams").onclick = () => copyOut(teamsText(), "Teams copied.");
+
+  /* ---------- Stats ---------- */
+  // Past games: saved weeks from the app plus games imported from the WhatsApp chat (history.json)
+  function allGames() {
+    const done = Object.keys(state.games).filter((id) => state.games[id].completed && state.games[id].summary)
+      .map((id) => { const g = state.games[id]; return { id, settings: g, playing: g.summary.playing || [], waitlist: g.summary.waitlist || [], dropped: g.summary.dropped || [], archivedAt: g.completedAt || 0 }; });
+    const app = state.history.concat(done);
+    const liveDates = new Set(app.map((g) => (g.settings || {}).date).filter(Boolean));
+    return app.concat(state.imported.filter((g) => !liveDates.has(g.settings.date)))
+      .sort((a, b) => ((b.settings || {}).date || "").localeCompare((a.settings || {}).date || "") || (b.archivedAt || 0) - (a.archivedAt || 0));
+  }
+  function renderPast() {
+    const games = allGames();
+    const first = games.length ? (games[games.length - 1].settings || {}).date : null;
+    $("past-sub").textContent = games.length + " game" + (games.length === 1 ? "" : "s") + (first ? " since " + MON[Number(first.slice(5, 7)) - 1] + " " + first.slice(0, 4) : "");
+    const tally = new Map();
+    const get = (name) => { const k = String(name || "").trim().toLowerCase(); if (!tally.has(k)) tally.set(k, { name: String(name || "").trim(), played: 0, won: 0, lost: 0, spent: 0 }); return tally.get(k); };
+    games.forEach((g) => {
+      const s = g.settings || {}, fee = Number(s.fee) || 0, chat = g.source === "chat";
+      (g.playing || []).forEach((p) => {
+        const t = get(p.name); t.played++;
+        if (s.winner && s.winner !== "draw" && p.team) { if (p.team === s.winner) t.won++; else t.lost++; }
+        if (chat || p.paid) t.spent += fee;
+      });
+      (g.dropped || []).concat(g.waitlist || []).forEach((p) => { if (p.owes && p.paid) get(p.name).spent += fee; });
+    });
+    const rows = Array.from(tally.values()).sort((a, b) => b.played - a.played || b.won - a.won || a.name.localeCompare(b.name));
+    state.tally = rows;
+    // Your stats first: games played, wins, what you owe
+    const mineR = me.name ? tally.get(me.name.trim().toLowerCase()) : null;
+    const owe = myDues().reduce((t, d) => t + d.owed.length * d.bi.share, 0);
+    const ms = $("my-stats"); ms.textContent = ""; ms.hidden = !me.name;
+    const tile = (v, t) => { const d = el("div"); d.appendChild(el("b", "num", v)); d.appendChild(el("span", "", t)); ms.appendChild(d); };
+    tile(String(mineR ? mineR.played : 0), "games you played");
+    tile(mineR && (mineR.won || mineR.lost) ? mineR.won + "–" + mineR.lost : "–", "your wins–losses");
+    tile("Rs " + owe.toLocaleString("en-IN"), "you owe");
+    $("m-members-n").textContent = rows.length + " ›";
+    $("m-completed-n").textContent = completedIds().length + " ›";
+    const lbMore = $("lb-more"); lbMore.hidden = rows.length <= 10; lbMore.textContent = state.showAllLb ? "Show top 10" : "Show all " + rows.length;
+    const tb = $("stats-body"); tb.textContent = "";
+    if (!rows.length) { const tr = el("tr"); const td = el("td", "muted small", "Stats appear once a game is completed."); td.colSpan = 5; tr.appendChild(td); tb.appendChild(tr); }
+    (state.showAllLb ? rows : rows.slice(0, 10)).forEach((r) => {
+      const tr = el("tr");
+      const name = el("td", "", r.name); if (me.name && same(r.name, me.name)) name.style.fontWeight = "700";
+      tr.appendChild(name);
+      tr.appendChild(el("td", "n", String(r.played)));
+      tr.appendChild(el("td", "n", r.won ? String(r.won) : "–"));
+      tr.appendChild(el("td", "n", r.lost ? String(r.lost) : "–"));
+      tr.appendChild(el("td", "n", r.spent ? r.spent.toLocaleString("en-IN") : "–"));
+      tb.appendChild(tr);
+    });
+    const ul = $("games"); ul.textContent = "";
+    if (!games.length) ul.appendChild(el("li", "muted", "No games saved yet."));
+    const shown = state.showAllGames ? games : games.slice(0, 15);
+    shown.forEach((g) => {
+      const s = g.settings || {}, li = el("li"), h = el("div", "gh"), pl = g.playing || [], chat = g.source === "chat";
+      h.appendChild(el("span", "", (fmtDate(s.date) || "Game") + (s.time ? " · " + s.time : "")));
+      h.appendChild(el("span", "small muted", s.winner === "white" ? "⚪ White won" : s.winner === "black" ? "⚫ Black won" : s.winner === "draw" ? "Draw" : chat ? "Result not recorded" : "No result"));
+      li.appendChild(h);
+      const tw = pl.filter((p) => p.team === "white").map((p) => p.name), tbk = pl.filter((p) => p.team === "black").map((p) => p.name);
+      if (tw.length || tbk.length) { li.appendChild(el("div", "small", "White: " + (tw.join(", ") || "–"))); li.appendChild(el("div", "small", "Black: " + (tbk.join(", ") || "–"))); }
+      else li.appendChild(el("div", "small", pl.map((p) => p.name).join(", ") + (g.guests ? " + " + g.guests + " guest" + (g.guests === 1 ? "" : "s") : "") || "No players saved"));
+      const count = pl.length + (g.guests || 0);
+      const bits = [count + " played"];
+      if (s.court) bits.push(s.court);
+      if (s.fee) bits.push("Rs " + s.fee + " each");
+      if (chat) bits.push("from WhatsApp");
+      else { const unpaid = pl.filter((p) => !p.paid).length; bits.push(unpaid ? unpaid + " unpaid" : "all paid"); }
+      li.appendChild(el("div", "tiny muted", bits.join(" · ")));
+      ul.appendChild(li);
+    });
+    const more = $("games-more");
+    more.hidden = games.length <= 15;
+    more.textContent = state.showAllGames ? "Show fewer" : "Show all " + games.length + " games";
+  }
+  $("games-more").onclick = () => { state.showAllGames = !state.showAllGames; render(); };
+  $("lb-more").onclick = () => { state.showAllLb = !state.showAllLb; render(); };
+  (MAIN ? fetch("history.json", { cache: "no-cache" }) : Promise.resolve({ ok: false })).then((r) => (r.ok ? r.json() : [])).then((rows) => {
+    state.imported = (rows || []).map((e) => ({
+      id: "chat-" + e.d, source: "chat", archivedAt: 0, guests: e.g || 0,
+      settings: { date: e.d, time: e.t || "", court: e.c || "", fee: e.f || null, winner: null },
+      playing: (e.p || []).map((n) => ({ name: n, paid: null, team: null }))
+    }));
+    render();
+  }).catch(() => {});
+
+  /* ---------- Sheets: profile and captain ---------- */
+  let sheetKind = null;
+  function openSheet(kind) { sheetKind = kind; $("scrim").hidden = false; }
+  function closeSheet() { $("scrim").hidden = true; $("sheet").textContent = ""; sheetKind = null; }
+  $("scrim").addEventListener("click", (e) => { if (e.target === $("scrim")) closeSheet(); });
+  ["input", "change"].forEach((ev) => $("sheet").addEventListener(ev, (e) => { if (e.target.matches("input, select, textarea")) e.target.dataset.dirty = "1"; }));
+  $("sheet").addEventListener("submit", (e) => { e.target.querySelectorAll("[data-dirty]").forEach((x) => delete x.dataset.dirty); }, true);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("scrim").hidden) closeSheet(); });
+  function sheetHead(title) {
+    const sh = $("sheet"); sh.textContent = "";
+    sh.appendChild(el("div", "grab"));
+    const h = el("div", "sheet-h"); h.appendChild(el("h3", "", title));
+    const x = btn("icon-btn", "✕", closeSheet); x.setAttribute("aria-label", "Close"); h.appendChild(x);
+    sh.appendChild(h);
+    return sh;
+  }
+  // Shrink a picked photo to a small square JPEG so it fits in the profile record
+  function shrinkPhoto(file) {
+    return new Promise((res, rej) => {
+      const r = new FileReader(); r.onerror = rej;
+      r.onload = () => {
+        const im = new Image(); im.onerror = rej;
+        im.onload = () => {
+          const S = 160, c = document.createElement("canvas"); c.width = c.height = S;
+          const m = Math.min(im.width, im.height);
+          c.getContext("2d").drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S);
+          res(c.toDataURL("image/jpeg", 0.82));
+        };
+        im.src = r.result;
+      };
+      r.readAsDataURL(file);
+    });
+  }
+  function openProfile() {
+    const pr = myProf() || {}, signed = !!me.uid;
+    const sh = sheetHead(signed ? "Your profile" : "Your name");
+    let photo; // undefined = unchanged, "" = removed, "google" = Google photo, else a new picture
+    const shown = () => (photo === undefined ? photoOf(pr) : photo === "google" ? pr.gphoto || "" : photo);
+    let big = null;
+    if (signed) {
+      const top = el("div", "prof-top");
+      big = el("span", "pav big"); top.appendChild(big);
+      const bt = el("div", "btns");
+      const file = el("input"); file.type = "file"; file.accept = "image/*"; file.hidden = true; file.id = "prof-file";
+      file.onchange = async () => {
+        const f = file.files && file.files[0]; if (!f) return;
+        try { const d = await shrinkPhoto(f); if (d.length > 150000) { toast("That photo is too big. Try another."); return; } photo = d; drawPhoto(); }
+        catch (e) { console.error(e); toast("Couldn't read that photo. Try another."); }
+      };
+      const up = btn("btn sm", "Change photo", () => file.click());
+      const gg = btn("btn sm", "Use Google photo", () => { photo = "google"; drawPhoto(); });
+      const rm = btn("btn sm ghost", "Remove photo", () => { photo = ""; drawPhoto(); });
+      bt.append(up, gg, rm, file); top.appendChild(bt); sh.appendChild(top);
+      var drawPhoto = () => { const src = shown(); fillAv(big, inp.value.trim() || me.name, src); gg.hidden = !pr.gphoto || src === pr.gphoto; rm.hidden = !src; };
+    }
+    sh.appendChild(el("div", "small muted", signed ? "Your photo, position and phone show to people in the group. Your UPI ID fills in when you add a bill." : "This phone uses this name to find you on the list. Your UPI ID fills in when you add a bill."));
+    const f = el("form", "grid2"); f.autocomplete = "off";
+    const lab = (t, full) => { const l = el("label", full ? "full" : ""); l.textContent = t; f.appendChild(l); return l; };
+    const inp = el("input"); inp.type = "text"; inp.value = me.name; inp.placeholder = "Your name"; inp.maxLength = 40; inp.autocomplete = "name"; inp.id = "prof-name";
+    lab("Name", true).appendChild(inp);
+    // UPI for everyone: it fills in when you add a bill. Saved to your account when signed in, else on this phone.
+    const upi = el("input"); upi.type = "text"; upi.maxLength = 60; upi.placeholder = "name@okhdfcbank or phone number"; upi.value = pr.upi || ls.get("smackdown-upi", ""); upi.id = "prof-upi";
+    lab("UPI ID (for when you pay the court)", true).appendChild(upi);
+    let pos = null, ph = null;
+    if (signed) {
+      pos = el("select"); pos.id = "prof-pos";
+      ["", ...POSITIONS].forEach((v) => { const o = el("option", "", v || "Not set"); o.value = v; pos.appendChild(o); }); pos.value = pr.pos || "";
+      lab("Position").appendChild(pos);
+      ph = el("input"); ph.type = "tel"; ph.inputMode = "tel"; ph.maxLength = 20; ph.placeholder = "98xxxxxxxx"; ph.value = pr.phone || ""; ph.id = "prof-phone";
+      lab("Phone (WhatsApp)").appendChild(ph);
+    }
+    const save = el("button", "btn primary full", "Save"); save.type = "submit"; f.appendChild(save);
+    sh.appendChild(f);
+    if (signed) { inp.addEventListener("input", () => drawPhoto()); drawPhoto(); }
+    f.onsubmit = async (ev) => {
+      ev.preventDefault();
+      const v = inp.value.trim().replace(/\s+/g, " ");
+      const nameChanged = !same(v, me.name);
+      if (v && nameChanged) { mine = new Set(); saveMine(); }
+      setMe(v);
+      const upiV = upi.value.trim().replace(/\s+/g, ""), upiChanged = upiV !== (ls.get("smackdown-upi", "") || "");
+      if (upiV) ls.set("smackdown-upi", upiV);
+      if (signed) {
+        const next = { pos: pos.value, phone: ph.value.trim().replace(/[^\d+ ]/g, "").slice(0, 20), upi: upiV };
+        const changed = [];
+        if (nameChanged) changed.push("name");
+        if (next.pos !== (pr.pos || "")) changed.push("position");
+        if (next.phone !== (pr.phone || "")) changed.push("phone");
+        if (next.upi !== (pr.upi || "")) changed.push("UPI ID");
+        const body = Object.assign({ at: Date.now() }, next); if (v) body.name = v;
+        if (photo !== undefined) {
+          if (photo === "") { body.photo = null; body.noPhoto = true; }
+          else if (photo === "google") { body.photo = null; body.noPhoto = false; }
+          else { body.photo = photo; body.noPhoto = false; }
+          if (shown() !== photoOf(pr)) changed.push("photo");
+        }
+        save.disabled = true;
+        try { await db.doc(PROFILES + "/" + me.uid).merge(body); }
+        catch (e) { console.error(e); toast("That didn't save. Try again."); save.disabled = false; return; }
+        if (next.upi) ls.set("smackdown-upi", next.upi);
+        if (changed.length) logAct("Updated profile: " + changed.join(", "), null);
+        state.guestOpen = false; closeSheet(); render(); toast(changed.length ? "Profile saved" : "Nothing changed");
+        return;
+      }
+      if (nameChanged) logAct(v ? "Changed name to " + v : "Cleared name", null);
+      state.guestOpen = false; closeSheet(); render(); toast(nameChanged ? (v ? "Hi " + v + "!" : "Name cleared") : upiChanged ? "UPI ID saved" : "Saved");
+    };
+    if (db.auth) {
+      const g = el("div", "card"); g.style.background = "var(--surface-2)";
+      if (me.uid) {
+        g.appendChild(el("b", "", "Signed in with Google"));
+        g.appendChild(el("div", "small muted", (me.email || "Your Google account") + ". Your profile follows you to any phone, and your changes are saved under this account."));
+        g.appendChild(btn("btn", "Sign out", () => signOutGoogle()));
+      } else {
+        g.appendChild(el("b", "", "Sign in with Google"));
+        g.appendChild(el("div", "small muted", "Add a photo, your position and phone, and your name follows you to any phone."));
+        g.appendChild(btn("btn primary", "Continue with Google", () => signInGoogle()));
+      }
+      sh.appendChild(g);
+    }
+    openSheet("profile");
+    setTimeout(() => inp.focus(), 50);
+  }
+  // Someone else's profile, from tapping their picture on the list
+  function openPlayerCard(p) {
+    const pr = profOf(p), sh = sheetHead(p.name);
+    const top = el("div", "prof-top"); top.appendChild(avatar("span", "pav big", p.name, pr));
+    const side = el("div"); side.appendChild(el("b", "", (pr && pr.name) || p.name));
+    if (p.guestOf) side.appendChild(el("div", "small muted", "Guest of " + p.guestOf));
+    top.appendChild(side); sh.appendChild(top);
+    const facts = el("div", "prof-facts");
+    const fact = (k, v) => { const d = el("div"); d.appendChild(el("span", "muted", k)); if (typeof v === "string") d.appendChild(el("b", "", v)); else d.appendChild(v); facts.appendChild(d); };
+    if (pr && pr.pos) fact("Position", pr.pos);
+    if (pr && pr.phone) { const digits = pr.phone.replace(/\D/g, ""); const a = el("a", "", pr.phone); a.href = "https://wa.me/" + (digits.length === 10 ? "91" + digits : digits); a.target = "_blank"; a.rel = "noopener"; fact("WhatsApp", a); }
+    if (facts.childNodes.length) sh.appendChild(facts);
+    else sh.appendChild(el("div", "small muted", isMine(p) ? "You haven't filled in your profile yet." : "No profile details yet."));
+    if (isMine(p)) sh.appendChild(btn("btn primary", "Edit your profile", () => openProfile()));
+    if (isAdmin() && !p.guestOf) {
+      const acct = p.uid || (pr && pr.id) || null, a = admins();
+      const box = el("div", "card"); box.id = "pc-admin"; box.style.background = "var(--surface-2)";
+      if (acct && a[acct]) {
+        box.appendChild(el("div", "small", ((pr && pr.name) || p.name) + " is an admin."));
+      } else if (acct) {
+        const mk = btn("btn", "Make " + p.name + " an admin", null); mk.id = "pc-make-admin";
+        mk.onclick = () => { if (!confirmTap(mk, "Make " + p.name + " an admin", "Tap again: they can run the group")) return; saveAdmins(Object.assign({}, a, { [acct]: (pr && pr.name) || p.name }), p.name + " is now an admin", "Made " + p.name + " an admin").then(() => closeSheet()); };
+        box.appendChild(mk);
+      } else box.appendChild(el("div", "small muted", "To make " + p.name + " an admin, ask them to sign in with Google once (tap their name at the top of the app)."));
+      sh.appendChild(box);
+    }
+    openSheet("player");
+  }
+  /* ---------- Google sign-in ---------- */
+  function authError(e) {
+    const c = (e && e.code) || "";
+    if (c === "auth/popup-closed-by-user" || c === "auth/cancelled-popup-request") return;
+    console.error(e);
+    if (/configuration-not-found|operation-not-allowed|unauthorized-domain|invalid-api-key|internal-error/.test(c)) toast("Google sign-in isn't switched on yet. Ask the captain to turn it on.");
+    else toast("Sign-in didn't work. Try again.");
+  }
+  async function signInGoogle() {
+    if (!db.auth) return;
+    try { await db.auth.signIn(); closeSheet(); }
+    catch (e) { authError(e); }
+  }
+  async function signOutGoogle() {
+    try { logAct("Signed out of Google", null); await db.auth.signOut(); } catch (e) { console.error(e); }
+    me = Object.assign({}, me, { uid: null, email: null }); ls.set("smackdown-profile", me);
+    closeSheet(); render(); toast("Signed out. This phone still remembers your name.");
+  }
+  // When someone signs in, load the name saved for their account, or save this phone's name to it
+  async function onSignedIn(u) {
+    const fresh = me.uid !== u.uid;
+    me = Object.assign({}, me, { uid: u.uid, email: u.email || null });
+    let saved = null;
+    try { saved = await db.doc(PROFILES + "/" + u.uid).get(); } catch (e) { console.error(e); }
+    const name = (saved && saved.name) || me.name || String(u.displayName || "").trim().split(/\s+/)[0] || "";
+    if (name && !same(name, me.name)) { mine = new Set(); saveMine(); }
+    me.name = name.slice(0, 40); ls.set("smackdown-profile", me);
+    const up = { at: Date.now(), gphoto: u.photoURL || null }; if (me.name) up.name = me.name;
+    db.doc(PROFILES + "/" + u.uid).merge(up).catch(() => {});
+    if (fresh) { logAct("Signed in with Google", null); toast("Signed in as " + (me.name || u.email || "you")); }
+    render();
+  }
+  if (db.auth) {
+    db.auth.onChange((u) => {
+      if (u) onSignedIn(u);
+      else if (me.uid) { me = Object.assign({}, me, { uid: null, email: null }); ls.set("smackdown-profile", me); render(); }
+    });
+    let redirected = false; try { redirected = !!sessionStorage.getItem("smackdown-redirect"); sessionStorage.removeItem("smackdown-redirect"); } catch (e) {}
+    if (redirected) db.auth.redirectResult().catch(authError);
+  }
+
+  /* ---------- Activity log (captain) ---------- */
+  function fmtWhen(t) {
+    if (!t) return "";
+    const d = new Date(t), h = d.getHours(), m = String(d.getMinutes()).padStart(2, "0");
+    return DOW[d.getDay()] + " " + d.getDate() + " " + MON[d.getMonth()] + ", " + ((h % 12) || 12) + ":" + m + (h < 12 ? " am" : " pm");
+  }
+  async function openActivity(who) {
+    if (!isCaptain()) { toast(captainOnly()); return; }
+    const sh = sheetHead("Activity");
+    sh.appendChild(el("div", "small muted", "Every join, drop-out, payment and change, newest first. A G mark means the person was signed in with Google."));
+    const box = el("div"); box.appendChild(el("div", "small muted", "Loading…")); sh.appendChild(box);
+    openSheet("activity");
+    let rows = [];
+    try { rows = await db.collection(ACTIVITY).fetch(); } catch (e) { box.textContent = ""; box.appendChild(el("div", "small", "Couldn't load the activity. Try again.")); return; }
+    if (sheetKind !== "activity") return;
+    rows.sort((a, b) => (b.at || b.t || 0) - (a.at || a.t || 0));
+    const names = Array.from(new Set(rows.map((r) => r.name))).sort((a, b) => a.localeCompare(b));
+    box.textContent = "";
+    const sel = el("select"); sel.setAttribute("aria-label", "Show activity for");
+    [["", "Everyone (" + rows.length + ")"]].concat(names.map((n) => [n, n + " (" + rows.filter((r) => r.name === n).length + ")"])).forEach(([v, t]) => { const o = el("option", "", t); o.value = v; sel.appendChild(o); });
+    sel.value = who || "";
+    const list = el("ul", "fb-list");
+    const draw = () => {
+      list.textContent = "";
+      const shown = rows.filter((r) => !sel.value || r.name === sel.value).slice(0, 300);
+      if (!shown.length) list.appendChild(el("li", "small muted", "Nothing yet. Changes show up here from now on."));
+      shown.forEach((r) => {
+        const li = el("li"), h = el("div", "fh");
+        const nm = el("b", "", r.name + (r.uid ? " · G" : "") + (r.captain ? " · captain" : ""));
+        h.appendChild(nm); h.appendChild(el("span", "tiny muted", fmtWhen(r.at || r.t)));
+        li.appendChild(h); li.appendChild(el("p", "", r.text || ""));
+        if (r.game) li.appendChild(el("span", "tiny muted", "Game " + fmtDate(r.game)));
+        list.appendChild(li);
+      });
+    };
+    sel.onchange = draw; draw();
+    box.appendChild(sel); box.appendChild(list);
+  }
+
+  /* ---------- Payment: split the court bill ---------- */
+  function renderPay(L) {
+    const card = $("home-pay"); card.textContent = "";
+    const bi = billInfo(L), P = payers(L), stage = stageOf(state.settings);
+    const { mineP, owed } = state.gid ? myShares(state.gid) : { mineP: [], owed: [] };
+    card.hidden = !state.ready || !P.length || (stage === "done" && !bi);
+    if (card.hidden) return;
+    const when = fmtDate(gameDate());
+    if (!bi) {
+      const quietBill = stage === "signup" || stage === "locked";
+      if (isCaptain() && !quietBill) { card.hidden = true; return; } // the to-do card has "Add the bill"
+      card.className = "card" + (quietBill ? " quiet-card" : "");
+      if (!quietBill) { const head = el("div", "card-head"); head.appendChild(el("h3", "", "Payment")); head.appendChild(el("span", "small muted", when)); card.appendChild(head); }
+      card.appendChild(el("div", "small muted", "Paid for the court? Add the total and your UPI ID. It gets split equally between the " + P.length + " playing."));
+      card.appendChild(btn(quietBill ? "btn sm" : "btn primary", "I paid the court · split the bill", () => openBill()));
+      return;
+    }
+    const others = bi.P.filter((p) => !same(p.name, bi.by)), paidN = others.filter((p) => p.paid).length;
+    const iPaidCourt = me.name && same(me.name, bi.by);
+    // The payer and organisers who don't owe see the Collect card instead
+    if (stage === "pay" && (iPaidCourt || (isCaptain() && !owed.length))) { card.hidden = true; return; }
+    card.className = "card";
+    const due = owed.length * bi.share, nGuests = mineP.filter((p) => p.guestOf).length;
+    card.appendChild(el("div", "small muted", "Court Rs " + bi.total.toLocaleString("en-IN") + " paid by " + (bi.by || "?") + ", split " + bi.split + " ways" + (bi.total % bi.split ? " (rounded up)" : "") + " · " + when));
+    if (owed.length && !iPaidCourt) {
+      card.appendChild(el("div", "bill-amt num due", "Pay " + (bi.by || "") + " Rs " + due));
+      if (owed.length > 1) card.appendChild(el("div", "small", owed.map((p) => p.guestOf ? p.name + " (your guest)" : "you").join(" + ") + ", Rs " + bi.share + " each"));
+      const pr = el("div", "payrow");
+      if (bi.upi) { const a = el("a", "btn primary wide", "Pay Rs " + due + " in UPI app"); a.href = upiLink(bi, due); pr.appendChild(a); }
+      pr.appendChild(btn("btn good wide", "I've paid for " + when + (owed.length > 1 ? " (" + owed.length + ")" : ""), () => setPaid(owed, true, "Marked as paid. Thanks!"), owed.some((p) => state.busy.has(p.id))));
+      card.appendChild(pr);
+      if (bi.upi) { const line = el("div", "upi-line"); line.appendChild(el("code", "", bi.upi)); line.appendChild(btn("btn sm", "Copy", () => copyText(bi.upi, "UPI ID copied. Paste it in your payment app."))); card.appendChild(line); }
+    } else {
+      const amt = el("div", "bill-amt num", "Rs " + bi.share); amt.appendChild(el("small", "", "each")); card.appendChild(amt);
+      if (iPaidCourt) card.appendChild(el("div", "done-note", "You paid the court. The others pay you Rs " + bi.share + " each."));
+      else if (mineP.length) {
+        const d = el("div", "done-note"); d.appendChild(el("span", "", "You've paid ✓" + (nGuests ? " (with your guest" + (nGuests > 1 ? "s" : "") + ")" : "")));
+        if (stage !== "done") {
+          const u = btn("link", "Undo", null); u.style.color = "inherit";
+          u.onclick = () => { if (confirmTap(u, "Undo", "Mark unpaid?")) setPaid(mineP, false, "Marked as not paid"); };
+          d.appendChild(u);
+        }
+        card.appendChild(d);
+      } else if (me.name && stage !== "done") card.appendChild(el("div", "tiny muted", "You're not on this game's list, so there's nothing for you to pay. Played under another name? Change your name to the one on the list."));
+    }
+    const prog = el("div", "progress"); const bar = el("i"); bar.style.width = (others.length ? Math.round(100 * paidN / others.length) : 100) + "%"; prog.appendChild(bar); card.appendChild(prog);
+    card.appendChild(el("div", "tiny muted num", paidN + " of " + others.length + " have paid" + (bi.by ? " " + bi.by : "")));
+    // Everyone sees who has paid and who still has to, by name
+    card.appendChild(payWho(others));
+  }
+  function payWho(others) {
+    const box = el("div", "paywho"); box.id = "pay-who";
+    const nm = (p) => p.name + (p.guestOf ? " (" + p.guestOf + "'s guest)" : "");
+    const line = (label, arr, cls) => { const r = el("div", "pw-row"); r.appendChild(el("span", "pw-h", label + " · " + arr.length)); const t = el("div", "pw-names"); arr.forEach((p) => t.appendChild(el("span", "tag " + cls, nm(p)))); r.appendChild(t); box.appendChild(r); };
+    const unpaid = others.filter((p) => !p.paid), paid = others.filter((p) => p.paid);
+    if (unpaid.length) line("Still to pay", unpaid, "pend");
+    if (paid.length) line("Paid", paid, "paid");
+    return box;
+  }
+  async function setPaid(list, val, msg, gid) {
+    gid = gid || state.gid;
+    if (!gid || !list.length) return false;
+    const theirs = list.find((p) => !canEdit(p));
+    if (theirs) { toast(notYours(theirs)); return false; }
+    list.forEach((p) => state.busy.add(p.id)); render();
+    let ok = false;
+    try {
+      const b = db.batch(); list.forEach((p) => b.update("games/" + gid + "/players/" + p.id, { paid: val }));
+      // A closed game keeps a summary for stats; keep it in step when an old share is paid
+      const g = state.games[gid], sm = g && g.completed && g.summary;
+      if (sm) { const fix = (arr) => (arr || []).map((x) => list.some((p) => same(p.name, x.name) && same(p.guestOf, x.guestOf)) ? Object.assign({}, x, { paid: val }) : x); b.update("games/" + gid, { summary: { playing: fix(sm.playing), waitlist: fix(sm.waitlist), dropped: fix(sm.dropped) } }); }
+      await b.commit(); toast(msg); ok = true; logAct(list.map((p) => p.name).join(", ") + (val ? " marked paid" : " marked not paid"), gid); }
+    catch (e) { console.error(e); toast("That didn't save. Check your connection and try again."); }
+    finally { list.forEach((p) => state.busy.delete(p.id)); render(); }
+    return ok;
+  }
+  // Change only the given fields of this game, so two people saving at once don't undo each other
+  async function patchGame(patch) {
+    if (!SETTINGS) throw new Error("no game");
+    try { await db.doc(SETTINGS).update(patch); }
+    catch (e) { if (state.settings) throw e; await db.doc(SETTINGS).set(Object.assign({ cap: 14 }, patch)); }
+  }
+  const andList = (a) => (a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1]);
+  // Bill: whoever paid the court enters the total. The preview names who pays before anything is saved.
+  function openBill() {
+    const s = state.settings || {}, b = s.bill || {}, L = lists(), P = payers(L), n = Math.max(1, P.length);
+    // Once a bill is in, only whoever added it (or an admin) can change it, so nobody can swap the UPI ID
+    if (db.live && s.bill && hasAdmins() && !isCaptain() && s.bill.owner !== authUid()) { toast((s.bill.by || "Someone") + " added this bill. Only they or an admin can change it."); return; }
+    const sh = sheetHead("Split the bill");
+    sh.appendChild(el("div", "small muted", "What did you pay for the court on " + fmtDate(gameDate(), true) + "?"));
+    const f = el("form", "grid2"); f.autocomplete = "off";
+    const mk = (label, type, val, ph) => { const l = el("label", "full"); l.textContent = label; const i = el("input"); i.type = type; i.value = val == null ? "" : val; if (ph) i.placeholder = ph; if (type === "number") i.inputMode = "numeric"; l.appendChild(i); f.appendChild(l); return i; };
+    const iTot = mk("Total paid (Rs)", "number", b.total, "3250"); iTot.classList.add("big-amt"); iTot.id = "bill-total";
+    const iBy = mk("Paid by", "text", b.by || me.name, "Your name"); iBy.id = "bill-by";
+    const iUpi = mk("Your UPI ID or number", "text", b.upi || (myProf() && myProf().upi) || ls.get("smackdown-upi", ""), "name@okhdfcbank"); iUpi.id = "bill-upi";
+    iBy.maxLength = 40; iUpi.maxLength = 60;
+    // People who pay without having played: dropped after the lock, or moved to the waitlist after the lock
+    const late = P.filter((p) => !L.playing.includes(p)).map((p) => p.name);
+    const prev = el("div", "prev full"); prev.id = "bill-preview"; f.appendChild(prev);
+    const save = el("button", "btn primary full big", "Save and split"); save.type = "submit"; f.appendChild(save);
+    const upd = () => {
+      const t = Math.round(Number(iTot.value)); prev.textContent = "";
+      prev.appendChild(el("b", "num", t > 0 ? n + " " + (n === 1 ? "person pays" : "people pay") + " Rs " + Math.ceil(t / n).toLocaleString("en-IN") : n + " " + (n === 1 ? "person shares" : "people share") + " the bill"));
+      prev.appendChild(el("span", "", L.playing.length + " who played" + (late.length ? ", plus " + andList(late) + ", who dropped after the lock" : "")));
+      save.textContent = t > 0 ? "Split Rs " + t.toLocaleString("en-IN") : "Save and split";
+    };
+    iTot.addEventListener("input", upd); upd();
+    f.onsubmit = async (ev) => {
+      ev.preventDefault();
+      const total = Math.round(Number(iTot.value)), by = iBy.value.trim().replace(/\s+/g, " "), upi = iUpi.value.trim().replace(/\s+/g, "");
+      if (!(total > 0)) { toast("Enter the total you paid."); return; }
+      if (!by) { toast("Add your name."); return; }
+      if (!upi) { toast("Add your UPI ID or number so people can pay you."); return; }
+      save.disabled = true;
+      try {
+        await patchGame({ bill: { total, by, upi, share: Math.ceil(total / n), n, at: Date.now(), owner: authUid() } });
+        ls.set("smackdown-upi", upi);
+        if (!me.name) setMe(by);
+        const mine2 = L.playing.find((p) => same(p.name, by));
+        if (mine2 && !mine2.paid && canEdit(mine2)) await db.doc(PLAYERS + "/" + mine2.id).update({ paid: true });
+        closeSheet(); render(); toast("Bill saved: Rs " + Math.ceil(total / n) + " each");
+        logAct((s.bill ? "Bill changed" : "Bill added") + ": Rs " + total + " paid by " + by + ", Rs " + Math.ceil(total / n) + " each (" + n + " people)");
+      } catch (e) { console.error(e); toast("That didn't save. Try again."); save.disabled = false; }
+    };
+    sh.appendChild(f);
+    if (s.bill) {
+      const rm = btn("btn ghost danger", "Remove bill", null);
+      rm.onclick = async () => { if (!confirmTap(rm, "Remove bill", "Tap again to remove")) return; try { await patchGame({ bill: null }); closeSheet(); toast("Bill removed"); logAct("Bill removed"); } catch (e) { toast("That didn't save. Try again."); } };
+      sh.appendChild(rm);
+    }
+    openSheet("bill");
+    setTimeout(() => iTot.focus(), 50);
+  }
+  // Lock: says what changes for players before it happens
+  function openLock() {
+    if (!isCaptain()) { toast(captainOnly()); return; }
+    const L = lists(), n = L.playing.length;
+    const sh = sheetHead("Lock " + fmtDate(gameDate()) + "?");
+    const pv = el("div", "prev");
+    ["The " + n + " player" + (n === 1 ? "" : "s") + " on the list " + (n === 1 ? "is" : "are") + " set.", "Anyone who drops now still pays a share.", "New names go to the waitlist."].forEach((t) => pv.appendChild(el("span", "", "• " + t)));
+    sh.appendChild(pv);
+    const ok = btn("btn primary big", "Lock the list", null); ok.id = "lock-yes";
+    ok.onclick = async () => { ok.disabled = true; await saveSettings({ locked: true, lockedAt: db.now() }, "List locked. New joins go to the waitlist and drop-outs still owe their share."); closeSheet(); render(); };
+    sh.appendChild(ok);
+    const no = btn("btn big", "Not yet", closeSheet); no.id = "lock-no"; sh.appendChild(no);
+    openSheet("lock");
+  }
+  // Game details (was in the gear sheet): date, time, court, spots, captain; delete a game nobody joined
+  function openDetails() {
+    if (!isCaptain()) { toast(captainOnly()); return; }
+    const s = state.settings || {};
+    const sh = sheetHead("Game details");
+    const f = el("form", "grid2"); f.autocomplete = "off";
+    const field = (label, type, key, ph, full) => {
+      const l = el("label", full ? "full" : ""); l.textContent = label;
+      const i = el("input"); i.type = type; i.value = s[key] == null ? (key === "cap" ? 14 : "") : s[key]; if (ph) i.placeholder = ph; i.name = key;
+      if (type === "number") i.inputMode = "numeric";
+      l.appendChild(i); f.appendChild(l); return i;
+    };
+    const iDate = field("Date", "date", "date"), iTime = field("Time", "text", "time", "9-10:30 pm");
+    const iCourt = field("Court", "text", "court", "Full court, Play Arena"), iCap = field("Spots", "number", "cap");
+    const iCapt = field("Captain", "text", "captain", "Name", true);
+    const save = el("button", "btn primary full", "Save game details"); save.type = "submit"; f.appendChild(save);
+    f.onsubmit = async (ev) => {
+      ev.preventDefault(); save.disabled = true;
+      await saveSettings({ date: iDate.value || null, time: iTime.value.trim(), court: iCourt.value.trim(), cap: Math.max(2, Math.min(30, Number(iCap.value) || 14)), captain: iCapt.value.trim() }, "Game details saved");
+      closeSheet(); render();
+    };
+    sh.appendChild(f);
+    if (state.gid && state.gid !== "current" && !(state.players || []).length) {
+      const del = btn("btn ghost danger", "Delete this empty game", null);
+      del.onclick = async () => { if (!confirmTap(del, "Delete this empty game", "Tap again to delete")) return; try { const gone = state.gid; await db.doc(SETTINGS).delete(); logAct("Deleted the empty game for " + fmtDate(dateOf(gone)), gone); state.picked = false; closeSheet(); toast("Game deleted"); } catch (e) { toast("That didn't save. Try again."); } };
+      sh.appendChild(del);
+    }
+    openSheet("details");
+  }
+
+  /* ---------- Organiser to-do: five steps, the "now" one follows the game's stage ---------- */
+  const teamsMade = (L) => L.playing.some((p) => p.team === "white") && L.playing.some((p) => p.team === "black");
+  function renderTodo(L) {
+    const box = $("todo"), s = state.settings || {};
+    box.textContent = "";
+    box.hidden = !state.ready || !state.gid || !isCaptain();
+    if (box.hidden) return;
+    const stage = stageOf(s), bi = billInfo(L);
+    if (stage === "done") { doneCard(box, L, bi); return; }
+    const resultDone = !!s.winner || !!s.noResult, teams = teamsMade(L), n = L.playing.length;
+    const nowIdx = stage === "signup" ? 1 : stage === "locked" ? 2 : stage === "day" ? (resultDone ? 4 : 3) : 4;
+    const doneF = [true, !!s.locked, teams, resultDone, false];
+    const head = el("div", "todo-h"); head.appendChild(el("span", "", "Organiser to-do")); head.appendChild(el("span", "num", doneF.filter(Boolean).length + " of 5 done")); box.appendChild(head);
+    const ul = el("ul", "steps"); box.appendChild(ul);
+    const KEYS = ["created", "lock", "teams", "result", "bill"];
+    const step = (i, title, fillFn) => {
+      const st = doneF[i] ? "dn" : i === nowIdx ? "nw" : i < nowIdx ? "ms" : "lt";
+      const li = el("li", st); li.dataset.step = KEYS[i]; li.dataset.state = st === "dn" ? "done" : st === "nw" ? "now" : st === "ms" ? "missed" : "later";
+      if (st === "nw") li.setAttribute("aria-current", "step");
+      li.appendChild(el("span", "ic", st === "dn" ? "✓" : ""));
+      const x = el("div", "x"); x.appendChild(el(st === "nw" ? "b" : "span", "t", title)); li.appendChild(x); ul.appendChild(li);
+      if (fillFn && st !== "lt") fillFn(x, st);
+    };
+    const waiting = L.waitlist.length ? " · " + L.waitlist.length + " waiting" : "";
+    step(0, "Game created", (x) => {
+      const r = el("div", "row");
+      r.appendChild(btn("link", "Copy list", () => copyOut(listText(), "List copied. Paste it in the group.")));
+      const d = btn("link", "Game details", () => openDetails()); d.id = "todo-details"; r.appendChild(d);
+      x.appendChild(r);
+    });
+    step(1, s.locked ? "List locked" : stage === "signup" ? "Lock the list" : "List wasn't locked", (x, st) => {
+      if (st === "nw") {
+        x.appendChild(el("span", "small muted", n + " of " + L.cap + " in" + waiting + "."));
+        const r = el("div", "row"), lb = btn("btn sm primary", "Lock now", () => openLock()); lb.id = "todo-lock"; r.appendChild(lb);
+        r.appendChild(btn("btn sm", "Copy list", () => copyOut(listText(), "List copied. Paste it in the group."))); x.appendChild(r);
+      } else if (st === "dn" && (stage === "signup" || stage === "locked")) {
+        const u = btn("link", "Unlock", null); u.id = "todo-unlock";
+        u.onclick = () => { if (confirmTap(u, "Unlock", "Tap again to unlock")) saveSettings({ locked: false, lockedAt: null }, "List unlocked"); };
+        x.appendChild(u);
+      }
+    });
+    const nw = L.playing.filter((p) => p.team === "white").length, nb = L.playing.filter((p) => p.team === "black").length;
+    step(2, teams ? "Teams made · " + nw + " v " + nb : "Make teams", (x, st) => {
+      if (st === "dn") { const r = el("div", "row"); r.appendChild(btn("link", "Change teams", () => go("teams"))); r.appendChild(btn("link", "Share teams", () => copyOut(teamsText(), "Teams copied."))); x.appendChild(r); return; }
+      x.appendChild(el("span", "small muted", n + " playing" + waiting));
+      const r = el("div", "row"), sb = btn("btn sm" + (st === "nw" ? " primary" : ""), "Shuffle teams", () => shuffleTeams(), n < 2); sb.id = "todo-shuffle"; r.appendChild(sb);
+      r.appendChild(btn("btn sm", "Pick by hand", () => go("teams"))); x.appendChild(r);
+    });
+    step(3, s.winner ? (s.winner === "draw" ? "Result: draw" : "Result: " + teamWord(s.winner) + " won") : s.noResult ? "Result skipped" : stage === "day" || stage === "pay" ? "Who won?" : "Record the result", (x, st) => {
+      if (st === "dn") { const c = btn("link", "Change", () => saveSettings({ winner: null, noResult: false }, "Result cleared")); c.id = "todo-result-change"; x.appendChild(c); return; }
+      const r = el("div", "res3"); r.id = "todo-result";
+      ["white", "black", "draw"].forEach((w) => { const b = btn("btn sm", w === "draw" ? "Draw" : teamWord(w), () => saveSettings({ winner: w, noResult: false }, w === "draw" ? "Result saved: draw" : "Result saved: " + teamWord(w) + " won")); b.dataset.w = w; r.appendChild(b); });
+      x.appendChild(r);
+      const sk = btn("link", "Skip", () => saveSettings({ noResult: true }, "Skipped the result")); sk.id = "todo-skip"; x.appendChild(sk);
+    });
+    step(4, bi ? "Collecting payments" : "Bill and payments", (x, st) => {
+      if (!bi) {
+        x.appendChild(el("span", "small muted", "Whoever paid the court adds the bill. " + payers(L).length + " people share it."));
+        const b = btn("btn sm" + (st === "nw" ? " primary" : ""), "I paid the court · split the bill", () => openBill()); b.id = "todo-bill"; x.appendChild(b);
+        x.appendChild(el("span", "tiny muted", "Someone else paid? They tap the same button on their phone."));
+        return;
+      }
+      const others = bi.P.filter((p) => !same(p.name, bi.by)), unpaid = others.filter((p) => !p.paid);
+      x.appendChild(el("span", "small", "Rs " + (unpaid.length * bi.share).toLocaleString("en-IN") + " to go · " + (others.length - unpaid.length) + " of " + others.length + " paid. Tick cash payers on the Collect card."));
+      const r = el("div", "row");
+      r.appendChild(btn("link", "Edit bill", () => openBill()));
+      const cl = btn("link", "Close this game anyway", null); cl.id = "todo-close"; cl.style.color = "var(--accent)";
+      cl.onclick = () => { if (!confirmTap(cl, "Close this game anyway", unpaid.length ? "Tap again: " + unpaid.length + " unpaid" : "Tap again to close", 6000)) return; forceComplete(); };
+      r.appendChild(cl); x.appendChild(r);
+    });
+  }
+  // Done: the game is closed; offer the next one in one tap
+  function doneCard(box, L, bi) {
+    const s = state.settings || {}, when = fmtDate(gameDate());
+    box.appendChild(el("div", "done-note", when + " is closed ✓"));
+    const bits = [];
+    if (bi) bits.push(bi.P.length + " shared Rs " + bi.total.toLocaleString("en-IN") + (bi.by ? " paid by " + bi.by : ""));
+    if (s.winner) bits.push(s.winner === "draw" ? "It was a draw" : teamWord(s.winner) + " won");
+    if (bits.length) box.appendChild(el("div", "small muted", bits.join(". ") + "."));
+    // The result can still be recorded after everyone has paid
+    if (!s.winner && !s.noResult) {
+      box.appendChild(el("div", "small", "Who won?"));
+      const r = el("div", "res3"); r.id = "todo-result";
+      ["white", "black", "draw"].forEach((w) => { const b = btn("btn sm", w === "draw" ? "Draw" : teamWord(w), () => saveSettings({ winner: w, noResult: false }, w === "draw" ? "Result saved: draw" : "Result saved: " + teamWord(w) + " won")); b.dataset.w = w; r.appendChild(b); });
+      box.appendChild(r);
+    }
+    const t = todayISO(), nx = activeIds().find((id) => id !== state.gid && dateOf(id) >= t);
+    if (nx) { box.appendChild(el("div", "small muted", "Next game")); box.appendChild(btn("btn primary", "Go to " + fmtDate(dateOf(nx)), () => { selectGame(nx, true); render(); })); return; }
+    if (!canNewGame()) return;
+    const u = usualGame();
+    box.appendChild(el("div", "todo-h", "Next step"));
+    box.appendChild(el("h3", "", "Start " + fmtDate(u.date)));
+    box.appendChild(el("div", "small muted", [u.time, u.court, u.cap + " spots"].filter(Boolean).join(" · ")));
+    const go2 = btn("btn primary", "Create and share", null); go2.id = "todo-start"; go2.onclick = () => quickCreate(u, go2); box.appendChild(go2);
+    box.appendChild(btn("link", "Change details", () => openNewGame()));
+  }
+  // Collect: what's still owed, for whoever paid the court and for organisers
+  function renderCollect(L) {
+    const box = $("collect"); box.textContent = "";
+    const bi = billInfo(L), stage = stageOf(state.settings), payer = !!(bi && me.name && same(me.name, bi.by));
+    box.hidden = !state.ready || !bi || stage !== "pay" || !(payer || isCaptain());
+    if (box.hidden) return;
+    const others = bi.P.filter((p) => !same(p.name, bi.by)), unpaid = others.filter((p) => !p.paid), paid = others.filter((p) => p.paid);
+    const head = el("div", "card-head"); head.appendChild(el("h3", "num", unpaid.length ? "Rs " + (unpaid.length * bi.share).toLocaleString("en-IN") + " to go" : "All paid ✓")); head.appendChild(el("span", "small muted num", paid.length + " of " + others.length + " paid")); box.appendChild(head);
+    const prog = el("div", "progress"), bar = el("i"); bar.style.width = (others.length ? Math.round(100 * paid.length / others.length) : 100) + "%"; prog.appendChild(bar); box.appendChild(prog);
+    box.appendChild(el("div", "small muted", (payer ? "You paid the court Rs " + bi.total.toLocaleString("en-IN") + ". Everyone pays you Rs " : (bi.by || "Someone") + " paid the court Rs " + bi.total.toLocaleString("en-IN") + ". Rs ") + bi.share + " each."));
+    const ul = el("ul", "cl"); ul.id = "collect-list";
+    unpaid.forEach((p) => {
+      const li = el("li"); li.appendChild(el("b", "", p.name));
+      if (p.guestOf) li.appendChild(el("span", "tag g", p.guestOf + "'s guest"));
+      if (p.status === "out") li.appendChild(el("span", "tag pend", "dropped late"));
+      else if (!L.playing.includes(p)) li.appendChild(el("span", "tag pend", "share still due"));
+      li.appendChild(btn("btn sm good", "Paid in cash", () => setPaid([p], true, p.name + " marked paid"), state.busy.has(p.id)));
+      ul.appendChild(li);
+    });
+    if (unpaid.length) box.appendChild(ul);
+    if (paid.length) {
+      box.appendChild(el("div", "tiny muted", "Paid (tap to undo)"));
+      const pw = el("div", "unp"); pw.id = "collect-paid";
+      paid.forEach((p) => { const b = btn("", p.name + " ✓", null, state.busy.has(p.id)); b.onclick = () => { if (confirmTap(b, p.name + " ✓", "Undo " + p.name + "?")) setPaid([p], false, p.name + " back to not paid"); }; pw.appendChild(b); });
+      box.appendChild(pw);
+    }
+    if (unpaid.length) box.appendChild(btn("btn primary", "Copy reminder for WhatsApp", () => copyOut(pendText(), "Reminder copied. Paste it in the group.")));
+    box.appendChild(btn("link", "Edit bill", () => openBill()));
+  }
+
+  // Feedback: stored under games/feedback/players so the existing Firestore rules allow it (needs a "name" field)
+  function openFeedback() {
+    const sh = sheetHead("Feedback");
+    sh.appendChild(el("div", "small muted", "Something broken, confusing or missing? Tell us. The captain reads these."));
+    const ta = el("textarea", "fb-text"); ta.maxLength = 1000; ta.placeholder = "Your feedback"; ta.setAttribute("aria-label", "Your feedback");
+    ta.value = ls.get("smackdown-fb-draft", ""); ta.addEventListener("input", () => ls.set("smackdown-fb-draft", ta.value));
+    sh.appendChild(ta);
+    let nameInp = null;
+    if (!me.name) { nameInp = el("input"); nameInp.type = "text"; nameInp.placeholder = "Your name (optional)"; nameInp.maxLength = 40; nameInp.setAttribute("aria-label", "Your name (optional)"); sh.appendChild(nameInp); }
+    else sh.appendChild(el("div", "tiny muted", "Sent as " + me.name));
+    const send = btn("btn primary", "Send feedback", null);
+    send.onclick = async () => {
+      const text = ta.value.trim();
+      if (!text) { toast("Type your feedback first."); ta.focus(); return; }
+      const name = (me.name || (nameInp && nameInp.value.trim()) || "Anonymous").slice(0, 40);
+      send.disabled = true;
+      try {
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        await Promise.race([db.doc(FEEDBACK + "/" + id).set({ name, text: text.slice(0, 1000), at: db.now(), screen: (location.hash || "#home").slice(1) }),
+          new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 12000))]);
+        emailFeedback(name, text.slice(0, 1000));
+        ls.set("smackdown-fb-draft", "");
+        closeSheet(); toast("Thanks! Feedback sent.");
+      } catch (e) { console.error(e); toast("That didn't send. Your text is kept. Try again in a moment."); send.disabled = false; }
+    };
+    sh.appendChild(send);
+    openSheet("feedback");
+    setTimeout(() => ta.focus(), 50);
+  }
+  // Also email each new feedback to the organiser: first through our own /api/feedback (Resend),
+  // and if that isn't set up, through FormSubmit. Best effort: the feedback is already saved in the app.
+  const FEEDBACK_EMAIL = "nikssefish2@gmail.com";
+  function emailFeedback(name, text) {
+    const data = { name, feedback: text, group: MAIN ? "main" : GROUP, screen: (location.hash || "#home").slice(1), app: APP_VERSION };
+    const viaFormSubmit = () => {
+      if (!FEEDBACK_EMAIL) return;
+      fetch("https://formsubmit.co/ajax/" + FEEDBACK_EMAIL, {
+        method: "POST", keepalive: true,
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(Object.assign({ _subject: "Smackdown feedback from " + name, _template: "table", _captcha: "false" }, data))
+      }).catch(() => {});
+    };
+    try {
+      fetch("api/feedback", { method: "POST", keepalive: true, headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+        .then((r) => { if (!r.ok && r.status !== 429) viaFormSubmit(); }).catch(viaFormSubmit);
+    } catch (e) { viaFormSubmit(); }
+  }
+  $("fb-open").onclick = openFeedback;
+  $("fb-bottom").onclick = openFeedback;
+  function feedbackSection(sh) {
+    const items = state.feedback.slice().sort((a, b) => (b.at || 0) - (a.at || 0));
+    const card = el("div", "card"); card.style.background = "var(--surface-2)";
+    const head = el("div", "card-head"); head.appendChild(el("h3", "", "Feedback")); head.appendChild(el("span", "small muted num", String(items.length)));
+    card.appendChild(head);
+    if (!items.length) card.appendChild(el("div", "small muted", "No feedback yet."));
+    const ul = el("ul", "fb-list");
+    items.forEach((f) => {
+      const li = el("li"), h = el("div", "fh");
+      const when = f.at ? new Date(f.at) : null;
+      h.appendChild(el("b", "", f.name + (when ? " · " + when.getDate() + " " + MON[when.getMonth()] : "")));
+      const x = btn("btn sm ghost", "Delete", null);
+      x.onclick = async () => { if (!confirmTap(x, "Delete", "Sure?")) return; try { await db.doc(FEEDBACK + "/" + f.id).delete(); } catch (e) { toast("Couldn't delete. Try again."); } };
+      h.appendChild(x); li.appendChild(h); li.appendChild(el("p", "", f.text || ""));
+      ul.appendChild(li);
+    });
+    card.appendChild(ul);
+    sh.appendChild(card);
+  }
+
+  $("me-chip").onclick = openProfile;
+  $("sw-btn").onclick = openSwitcher;
+  // Remember groups this phone has opened, for the switcher
+  const visited = new Set(ls.get("smackdown-groups", []).concat([GROUP]));
+  ls.set("smackdown-groups", Array.from(visited));
+  const groupHref = (g) => location.pathname + (g === "friday" ? "" : "?g=" + g) + "#home";
+  function allGroups() {
+    const all = new Set(["friday", GROUP].concat(Array.from(visited), Object.keys(state.configs), Array.from(state.groupsSeen)));
+    return Array.from(all).map((g) => groupInfoFor(g, state.configs[g])).sort((a, b) => a.weekday - b.weekday || a.name.localeCompare(b.name));
+  }
+  function openNewGroup() {
+    const sh = sheetHead("New group");
+    sh.appendChild(el("div", "small muted", "Each group has its own list, payments, teams and stats. Your name works in all of them."));
+    const f = el("form", "grid2"); f.autocomplete = "off";
+    const lab = (text, input, full) => { const l = el("label", full ? "full" : ""); l.textContent = text; l.appendChild(input); f.appendChild(l); return input; };
+    const iName = lab("Group name", Object.assign(el("input"), { type: "text", placeholder: "Monday Hoops", maxLength: 40 }), true);
+    const iDay = lab("Day", daySelect(1));
+    const iTime = lab("Time", Object.assign(el("input"), { type: "text", placeholder: "9 pm", maxLength: 30 }));
+    const hint = el("div", "tiny muted full"); f.appendChild(hint);
+    const slugFor = () => { const d = DAYS[Number(iDay.value)].toLowerCase(), n = slugify(iName.value); return (!state.configs[d] && !state.groupsSeen.has(d) && d !== "friday") ? d : (n || d + "-2"); };
+    const upd = () => { hint.textContent = "Link: " + location.host + location.pathname + "?g=" + slugFor(); };
+    iName.oninput = upd; iDay.onchange = upd; upd();
+    f.appendChild(el("div", "small muted full", me.uid ? "You'll be this group's admin. You can make others admins from their player card." : "Sign in with Google first (tap your name) to be this group's admin."));
+    const go2 = el("button", "btn primary full", "Create group"); go2.type = "submit"; f.appendChild(go2);
+    f.onsubmit = async (ev) => {
+      ev.preventDefault();
+      const g = slugFor(), wd = Number(iDay.value);
+      if (g === "friday" || state.configs[g]) { toast("That link is taken. Try another name."); return; }
+      try {
+        await db.doc("games/config-" + g).set({ kind: "config", group: g, name: iName.value.trim() || DAYS[wd] + " Night Smackdown", weekday: wd, time: iTime.value.trim(), court: "", createdAt: Date.now(), admins: me.uid ? { [me.uid]: me.name || me.email || "Admin" } : {} });
+        // the group's first game, on the next chosen weekday
+        const d0 = new Date(); d0.setDate(d0.getDate() + (wd - d0.getDay() + 7) % 7);
+        const first = d0.getFullYear() + "-" + String(d0.getMonth() + 1).padStart(2, "0") + "-" + String(d0.getDate()).padStart(2, "0");
+        await db.doc("games/" + g + "--g-" + first).set({ group: g, date: first, time: iTime.value.trim(), court: "", cap: 14, captain: "", locked: false, winner: null, bill: null, completed: false, createdAt: Date.now() });
+        location.href = groupHref(g);
+      } catch (e) { console.error(e); toast("That didn't save. Try again."); }
+    };
+    sh.appendChild(f);
+    openSheet("newgroup");
+  }
+  function daySelect(v) {
+    const sel = el("select"); DAYS.forEach((d, i) => { const o = el("option", "", d); o.value = String(i); sel.appendChild(o); }); sel.value = String(v); return sel;
+  }
+  $("m-link").onclick = () => copyOut(link(), "Link copied. Share it with the group.");
+  $("m-switch").onclick = openSwitcher;
+  $("m-members").onclick = openMembers;
+  $("m-completed").onclick = openCompleted;
+  // Members: everyone who has played in this group, most games first
+  function openMembers() {
+    const sh = sheetHead("Members"), rows = state.tally || [];
+    sh.appendChild(el("div", "small muted", rows.length + " people have played in this group."));
+    const adm = new Set(Object.values(admins()).map((x) => String(x).trim().toLowerCase()));
+    const ul = el("ul", "cl");
+    rows.forEach((r) => {
+      const li = el("li"); li.appendChild(avatar("span", "pav", r.name, profOf({ name: r.name })));
+      li.appendChild(el("b", "", r.name));
+      if (adm.has(r.name.trim().toLowerCase())) li.appendChild(el("span", "tag you", "admin"));
+      li.appendChild(el("span", "small muted num", r.played + " game" + (r.played === 1 ? "" : "s")));
+      ul.appendChild(li);
+    });
+    sh.appendChild(ul);
+    openSheet("members");
+  }
+  // Organiser rows at the bottom of the Group tab. Players only see how to unlock.
+  function renderOrgMenu() {
+    const m = $("org-menu"); m.textContent = "";
+    $("m-switch-n").textContent = allGroups().length + " groups ›";
+    const row = (id, label, right, fn) => { const b = btn("", "", fn); b.id = id; b.append(label); b.appendChild(el("span", "r", right || "›")); m.appendChild(b); };
+    if (!isCaptain()) { row("m-unlock", hasAdmins() ? "Admin sign-in" : "Unlock organiser tools", !hasAdmins() && !pinHash() ? "set a PIN ›" : "›", () => openUnlock()); return; }
+    row("m-settings", "Group settings", "", () => openGroupSettings());
+    row("m-admins", "Admins", hasAdmins() ? Object.keys(admins()).length + " ›" : "›", () => openAdmins());
+    row("m-activity", "Activity log", "", () => openActivity());
+    row("m-feedback", "Feedback", state.feedback.length + " ›", () => openFeedbackList());
+    if (!hasAdmins()) row("m-off", "Turn off organiser tools on this phone", " ", () => { captHash = null; ls.set(CAPT_KEY, null); render(); toast("Organiser tools off on this phone."); });
+  }
+  // Unlock organiser tools: the PIN, or Google sign-in once the group has admins
+  function openUnlock() {
+    const sh = sheetHead("Organiser tools");
+    if (hasAdmins()) {
+      const names = Object.values(admins()).filter(Boolean);
+      sh.appendChild(el("div", "small muted", "Admins run this group: " + (names.join(", ") || "1 person") + ". Admins lock the list, make teams, tick payments and change game details."));
+      if (!me.uid) {
+        sh.appendChild(el("div", "small", "Are you an admin? Sign in with Google to unlock."));
+        if (db.auth) sh.appendChild(btn("btn primary", "Continue with Google", () => signInGoogle()));
+      } else sh.appendChild(el("div", "small", "You're signed in as " + (me.name || me.email || "you") + ", but you're not an admin yet. Ask one of the admins to make you one."));
+      openSheet("unlock");
+      return;
+    }
+    sh.appendChild(el("div", "small muted", pinHash() ? "Enter the organiser PIN to lock the list, make teams, tick payments and change game details." : "No organiser PIN yet. Pick one (4+ digits) and share it only with whoever runs the game."));
+    const f = el("form", "guest-row"); f.autocomplete = "off";
+    const inp = el("input"); inp.type = "password"; inp.inputMode = "numeric"; inp.placeholder = "Organiser PIN"; inp.maxLength = 12; inp.setAttribute("aria-label", "Organiser PIN");
+    const b = el("button", "btn primary", pinHash() ? "Unlock" : "Set PIN"); b.type = "submit";
+    f.append(inp, b);
+    f.onsubmit = async (ev) => {
+      ev.preventDefault();
+      const pin = inp.value.trim();
+      if (pin.length < 4) { toast("Use at least 4 characters."); return; }
+      const h = await sha(pin);
+      if (!pinHash()) {
+        try { await db.doc(CONFIG).set(Object.assign({}, state.config, { kind: "config", pinHash: h })); } catch (e) { console.error(e); toast("That didn't save. Try again."); return; }
+        toast("PIN set. Organiser tools on."); logAct("Set the captain PIN", null);
+      } else if (h !== pinHash()) { toast("Wrong PIN."); return; }
+      else { toast("Organiser tools on."); logAct("Turned on captain mode", null); }
+      captHash = h; ls.set(CAPT_KEY, h); sketch = {}; ls.set("smackdown-sketch", sketch);
+      inp.blur(); closeSheet(); render();
+    };
+    sh.appendChild(f);
+    openSheet("unlock"); setTimeout(() => inp.focus(), 50);
+  }
+  // Group settings (organisers): name, usual day, time and court; the PIN while there are no admins
+  function openGroupSettings() {
+    if (!isCaptain()) { toast(captainOnly()); return; }
+    const gi = groupInfo(), sh = sheetHead("Group settings");
+    sh.appendChild(el("div", "small muted", "New games start from these."));
+    const gf = el("form", "grid2"); gf.autocomplete = "off";
+    const glab = (text, input, full) => { const l = el("label", full ? "full" : ""); l.textContent = text; l.appendChild(input); gf.appendChild(l); return input; };
+    const gName = glab("Group name", Object.assign(el("input"), { type: "text", value: gi.name, maxLength: 40 }), true);
+    const gDay = glab("Usual day", daySelect(gi.weekday));
+    const gTime = glab("Usual time", Object.assign(el("input"), { type: "text", value: gi.time, placeholder: "9 pm", maxLength: 30 }));
+    const gCourt = glab("Usual court", Object.assign(el("input"), { type: "text", value: gi.court, placeholder: "Court name", maxLength: 60 }), true);
+    const gUpd = el("label", "full"); gUpd.style.flexDirection = "row"; gUpd.style.alignItems = "center"; gUpd.style.gap = "8px";
+    const gChk = el("input"); gChk.type = "checkbox"; gChk.checked = true; gUpd.append(gChk, "Use this for upcoming games too"); gf.appendChild(gUpd);
+    const gs = el("button", "btn primary full", "Save group settings"); gs.type = "submit"; gf.appendChild(gs);
+    gf.onsubmit = async (ev) => {
+      ev.preventDefault();
+      const patch = { kind: "config", group: GROUP, name: gName.value.trim() || gi.name, weekday: Number(gDay.value), time: gTime.value.trim(), court: gCourt.value.trim() };
+      try {
+        await db.doc(CONFIG).set(Object.assign({}, state.config, patch));
+        if (gChk.checked) {
+          const t = todayISO(), b = db.batch(); let n = 0;
+          activeIds().filter((id) => dateOf(id) >= t).forEach((id) => {
+            const g = state.games[id], up = { time: patch.time, court: patch.court || g.court || "" };
+            // move a game nobody has joined onto the new usual day, same week
+            if (patch.weekday !== gi.weekday && g.date && !(state.playersBy[id] || []).length) { const nd = addDays(g.date, patch.weekday - gi.weekday); if (nd >= t) up.date = nd; }
+            b.update("games/" + id, up); n++;
+          });
+          if (n) await b.commit();
+        }
+        document.activeElement && document.activeElement.blur();
+        toast("Group settings saved");
+        logAct("Group settings: " + patch.name + ", " + DAYS[patch.weekday] + "s" + (patch.time ? ", " + patch.time : "") + (patch.court ? ", " + patch.court : ""), null);
+      } catch (e) { console.error(e); toast("That didn't save. Try again."); }
+    };
+    sh.appendChild(gf);
+    if (!hasAdmins()) {
+      sh.appendChild(el("b", "small", "Organiser PIN"));
+      const pf = el("form", "guest-row"); pf.autocomplete = "off";
+      const pi = el("input"); pi.type = "password"; pi.inputMode = "numeric"; pi.placeholder = "New organiser PIN"; pi.maxLength = 12;
+      const pb = el("button", "btn", "Change PIN"); pb.type = "submit"; pf.append(pi, pb);
+      pf.onsubmit = async (ev) => {
+        ev.preventDefault(); const pin = pi.value.trim();
+        if (pin.length < 4) { toast("Use at least 4 characters."); return; }
+        const h = await sha(pin), was = captHash;
+        // switch this phone to the new PIN first, so the live update doesn't lock it out
+        captHash = h; ls.set(CAPT_KEY, h);
+        try { await db.doc(CONFIG).set(Object.assign({}, state.config, { kind: "config", pinHash: h })); toast("PIN changed. Share it with the next organiser."); logAct("Changed the captain PIN", null); }
+        catch (e) { captHash = was; ls.set(CAPT_KEY, was); toast("That didn't save. Try again."); return; }
+        pi.value = ""; pi.blur(); render();
+      };
+      sh.appendChild(pf);
+    }
+    openSheet("gsettings");
+  }
+  function openAdmins() { if (!isCaptain()) { toast(captainOnly()); return; } const sh = sheetHead("Admins"); adminSection(sh); openSheet("admins"); }
+  function openFeedbackList() { if (!isCaptain()) { toast(captainOnly()); return; } const sh = sheetHead("Feedback"); feedbackSection(sh); openSheet("fbread"); }
+  async function saveSettings(patch, msg) {
+    if (!isCaptain()) { toast(captainOnly()); return; }
+    try {
+      await patchGame(patch); toast(msg);
+      const bits = ["date", "time", "court", "cap", "captain"].filter((k) => k in patch).map((k) => (k === "cap" ? "spots" : k) + " " + (patch[k] == null || patch[k] === "" ? "-" : patch[k]));
+      logAct(msg + (bits.length ? " (" + bits.join(", ") + ")" : ""));
+    }
+    catch (e) { console.error(e); toast("That didn't save. Try again."); }
+  }
+  async function forceComplete() {
+    const id = state.gid, L = lists(), bi = billInfo(L);
+    const strip = (p) => ({ name: p.name, paid: !!p.paid, tentative: !!p.tentative, guestOf: p.guestOf || null, team: p.team || null });
+    try {
+      await db.doc(SETTINGS).update({ completed: true, completedAt: Date.now(), date: gameDate(), fee: bi ? bi.share : null, upi: bi ? bi.upi : null,
+        summary: { playing: L.playing.map(strip), waitlist: L.waitlist.map((p) => p.owes ? { name: p.name, owes: true, paid: !!p.paid } : { name: p.name }), dropped: L.out.map((p) => ({ name: p.name, owes: !!p.owes, paid: !!p.paid })) } });
+      state.picked = false; closeSheet(); toast(fmtDate(dateOf(id)) + " is closed"); const left = bi ? bi.P.filter((p) => !p.paid && !same(p.name, bi.by)).map((p) => p.name) : []; logAct("Marked the game completed" + (left.length ? " (not paid: " + left.join(", ") + ")" : ""), id);
+    } catch (e) { console.error(e); toast("That didn't save. Try again."); }
+  }
+  /* ---------- Admins ---------- */
+  async function saveAdmins(next, msg, logText) {
+    try {
+      await db.doc(CONFIG).set(Object.assign({}, state.config, { kind: "config", admins: next }));
+      state.config = Object.assign({}, state.config, { admins: next });
+      toast(msg); logAct(logText, null); if (sheetKind === "admins") openAdmins(); render();
+    } catch (e) { console.error(e); toast("That didn't save. Try again."); }
+  }
+  function adminSection(sh) {
+    sh.appendChild(el("b", "small", "Admins"));
+    const box = el("div", "card"); box.style.background = "var(--surface-2)"; sh.appendChild(box);
+    if (!hasAdmins()) {
+      box.appendChild(el("div", "small muted", "Switch from the PIN to admins. Admins sign in with Google, can run the game from any phone, and can make other people admins. Once there's an admin, the PIN stops working."));
+      if (!me.uid) { if (db.auth) box.appendChild(btn("btn primary", "Sign in with Google first", () => signInGoogle())); return; }
+      const mk = btn("btn primary", "Make me the first admin", null);
+      mk.onclick = () => { if (!confirmTap(mk, "Make me the first admin", "Tap again: the PIN will stop working")) return; saveAdmins({ [me.uid]: me.name || me.email || "Admin" }, "You're an admin. The PIN is switched off.", "Became the first admin (PIN switched off)"); };
+      box.appendChild(mk);
+      return;
+    }
+    const a = admins(), ids = Object.keys(a).sort((x, y) => String(a[x]).localeCompare(String(a[y])));
+    const ul = el("ul", "fb-list"); box.appendChild(ul);
+    ids.forEach((uid) => {
+      const li = el("li"); li.style.display = "flex"; li.style.alignItems = "center"; li.style.gap = "8px";
+      const nm = el("span", "", (a[uid] || "Admin") + (uid === me.uid ? " (you)" : "")); nm.style.marginRight = "auto"; li.appendChild(nm);
+      if (ids.length > 1) {
+        const rm = btn("btn sm ghost danger", "Remove", null);
+        rm.onclick = () => { if (!confirmTap(rm, "Remove", "Tap again")) return; const next = Object.assign({}, a); delete next[uid]; saveAdmins(next, (a[uid] || "Admin") + " is no longer an admin", "Removed " + (a[uid] || "someone") + " as admin"); };
+        li.appendChild(rm);
+      }
+      ul.appendChild(li);
+    });
+    const add = el("div"); box.appendChild(add);
+    add.appendChild(el("div", "small muted", "Loading people who've signed in…"));
+    // the sheet redraws on every live update, so reuse the list for a little while
+    if (!profCache || Date.now() - profCache.at > 30000) profCache = { at: Date.now(), p: db.collection(PROFILES).fetch() };
+    profCache.p.then((rows) => {
+      add.textContent = "";
+      const cands = rows.filter((r) => r.id && !a[r.id] && r.name).sort((x, y) => String(x.name).localeCompare(String(y.name)));
+      if (!cands.length) { add.appendChild(el("div", "small muted", "To make someone an admin, ask them to sign in with Google first (Group tab, or their picture at the top). They'll then show up here.")); return; }
+      const f = el("form", "guest-row");
+      const sel = el("select"); sel.setAttribute("aria-label", "Person to make admin");
+      cands.forEach((r) => { const o = el("option", "", r.name); o.value = r.id; sel.appendChild(o); });
+      const b = el("button", "btn", "Make admin"); b.type = "submit";
+      f.append(sel, b); add.appendChild(f);
+      add.appendChild(el("div", "tiny muted", "Only people who've signed in with Google are listed."));
+      f.onsubmit = (ev) => { ev.preventDefault(); const r = cands.find((c) => c.id === sel.value); if (!r) return; saveAdmins(Object.assign({}, a, { [r.id]: r.name }), r.name + " is now an admin", "Made " + r.name + " an admin"); };
+    }).catch(() => { profCache = null; add.textContent = ""; add.appendChild(el("div", "small", "Couldn't load the people list. Try again.")); });
+  }
+  let profCache = null;
+  /* ---------- Live data ---------- */
+  function cleanSketch() {
+    // drop sketch entries for players who left this game
+    const ids = new Set(state.players.map((p) => p.id)); let changed = false;
+    Object.keys(sketch).forEach((k) => { if (!ids.has(k)) { delete sketch[k]; changed = true; } });
+    if (changed) ls.set("smackdown-sketch", sketch);
+  }
+  // A live listener dropped (phone slept, network changed). Reload by itself once it's safe, instead of asking people to refresh.
+  let reloading = false;
+  function busyTyping() { const a = document.activeElement; return !$("scrim").hidden || !!(a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.value); }
+  function lost() {
+    if (reloading) return; reloading = true;
+    toast("Reconnecting…");
+    const tryReload = () => { if (document.visibilityState === "visible" && !busyTyping()) location.reload(); else setTimeout(tryReload, 1500); };
+    setTimeout(tryReload, 1200);
+  }
+  go(location.hash.slice(1) || "home", false);
+  db.collection("games").onSnapshot((snap) => {
+    const games = {};
+    const configs = {};
+    snap.docs.forEach((d) => {
+      const v = d.data(), id = d.id;
+      if (id === "config" || /^config-/.test(id)) { configs[id === "config" ? "friday" : id.replace(/^config-/, "")] = v; return; }
+      if (v.kind === "config") return;
+      const g = v.group || "friday"; state.groupsSeen.add(g);
+      if (g === GROUP) games[id] = v;
+    });
+    state.configs = configs; state.config = configs[GROUP] || {};
+    state.games = games; state.gamesReady = true;
+    shownIds().forEach(watchPlayers);
+    Object.keys(games).filter((id) => games[id].completed && owesIn(games[id])).forEach(watchPlayers);
+    const prevGid = state.gid;
+    syncSelection();
+    if (prevGid && prevGid !== state.gid) { sketch = {}; ls.set("smackdown-sketch", sketch); }
+    if (!state.gid || state.playersBy[state.gid]) state.ready = true;
+    Object.keys(games).forEach(checkComplete);
+    ensureUpcoming();
+    render();
+  }, lost);
+  $("app-ver").textContent = "Version " + APP_VERSION;
+  db.collection(PROFILES).onSnapshot((snap) => { const m = {}; snap.docs.forEach((d) => { m[d.id] = Object.assign({}, d.data(), { id: d.id }); }); state.profiles = m; render(); }, () => {});
+  db.collection(FEEDBACK).onSnapshot((snap) => { state.feedback = snap.docs.map((d) => Object.assign({}, d.data(), { id: d.id })); renderOrgMenu(); if (!$("scrim").hidden && sheetKind === "fbread") openFeedbackList(); }, () => {});
+  if (MAIN) db.collection("history").onSnapshot((snap) => { state.history = snap.docs.map((d) => Object.assign({}, d.data(), { id: d.id })); render(); }, () => {});
+  window.addEventListener("hashchange", () => go(location.hash.slice(1), false));
+})();
+</script>
+</body>
+</html>
